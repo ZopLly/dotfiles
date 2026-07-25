@@ -1,0 +1,27 @@
+
+{
+	"layer": "top"
+	"position": "top"
+	"modules-left": [
+		"custom/logo",
+		"niri/workspases" 
+	],
+
+	"modules-center": [
+		"niri/window"
+	],
+
+	"modules-right": [
+		"custom/vpn",
+		"network",
+		"battery",
+		"pulseaudio",
+		"tray",
+		"clock"
+	],
+	"custom-logo": {
+		"format": "",
+		"tooltip": false,
+		"on-click": "fuzzel"
+	}
+}
