@@ -20,7 +20,9 @@
 		"tray",
 		"clock"
 	],
-
+	"clock": {
+		"format": "{:%H%M}":
+	},
 	"custom/logo": {
 		"format": "",
 		"tooltip": false,
