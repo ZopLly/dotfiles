@@ -21,7 +21,7 @@
 		"clock"
 	],
 	"clock": {
-		"format": "{:%H%M}":
+		"format": "{:%H%M}"
 	},
 	"custom/logo": {
 		"format": "",
