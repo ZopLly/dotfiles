@@ -1,5 +1,71 @@
-* {
-    font-family: "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 14px;
+/* Общие настройки для всей панели */
+window#waybar {
+    background-color: rgba(43, 48, 59, 0.5); /* Полупрозрачный темный фон */
+    border-bottom: 2px solid rgba(100, 114, 125, 0.5);
+    color: #ffffff;
+    font-family: "JetBrainsMono Nerd Font", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+/* Стилизация всех модулей по умолчанию */
+#workspaces button,
+#clock {
+
+font-weight:bold;
+
+padding:0 20px;
+
+}
+#battery,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray {
+    padding: 0 10px;
+    color: #ffffff;
+    margin: 4px 2px;
+    border-radius: 4px;
+    background-color: #383c4a;
+}
+
+/* Стили для рабочих пространств */
+#workspaces button {
+    box-shadow: inset 0 -3px transparent;
+    padding: 0 5px;
+    transition: all 0.3s ease;
+}
+
+#workspaces button.active {
+    background-color: #64727D;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+/* Индивидуальные цветовые акценты для модулей */
+#clock {
+    background-color: #64727D;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
 }
 
