@@ -1,10 +1,11 @@
 
 {
-	"layer": "top"
-	"position": "top"
+	"layer": "top",
+	"position": "top",
+
 	"modules-left": [
 		"custom/logo",
-		"niri/workspases" 
+		"niri/workspaces" 
 	],
 
 	"modules-center": [
@@ -19,7 +20,8 @@
 		"tray",
 		"clock"
 	],
-	"custom-logo": {
+
+	"custom/logo": {
 		"format": "",
 		"tooltip": false,
 		"on-click": "fuzzel"
