@@ -17,3 +17,6 @@ My personal Wayland desktop configuration.
 git clone https://github.com/...
 cd dotfiles
 ./install.sh
+
+
+sudo pacman -S network-manager-applet fuzzel waybar ..

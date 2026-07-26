@@ -1,73 +1,91 @@
-
 {
-	"layer": "top",
-	"position": "top",
-	"height": 32, 
+    "layer": "top",
+    "position": "top",
+    "height": 30,
 
-	"modules-left": [
-		"custom/logo",
-		"niri/workspaces",
-		"custom/window"
-	],
+    "modules-left": [
+        "custom/logo",
+        "niri/workspaces",
+        "niri/window"
+    ],
 
-	"modules-center": [
-		"clock"
-	],
+    "modules-center": [
+        "clock"
+    ],
 
-	"modules-right": [
-		"niri/language",
-		"custom/vpn",
-		"network",
-		"battery",
-		"pulseaudio"
-	],
-	"clock":{ 
-		"format": " {:%H:%M},  {:%A, %B %d, %Y}",
-		"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
-	},
-	"network": {
-		"format-wifi": " {essid}",
-		"format-ethernet": "   {ipaddr}/{cidr}",
-		"format-disconnected": "   Disconnected",
-		"tooltip-format-wifi": "Сигнал: {signalStrength}%"
-	},
-	"pulseaudio": {
-		"format": "{icon} {volume}%",
-		"format-muted": "   Muted",
-		"format-icons": {
-			"default": ["  ", "  ", "  "]
-		},
-	"on-click": "pavucontrol" // Открывает микшер по кlicky
-	},
-	"battery": {
-		"states": {
-			"warning": 30, 
-			"critical": 15
-		},
-		"format": "{icon} {capacity}%",
-		"format-charging": " {capacity}%",
-		"format-plugged": " {capacity}%",
-		"format-icons": ["", "", "", "", ""]
-	},
+    "modules-right": [
+	"network",
+        "custom/vpn",
+	"niri/language",
+	"pulseaudio",
+        "battery",
+        "custom/power" // <-- Добавлена кнопка питания
+    ],
 
-	"tray": {
-		"icon-size": 21,
-		"spacing": 10
-	},
+    "niri/language": {
+        "format": "{}",
+        "format-en": "en",
+        "format-ru": "ru"
+    },
+    "niri/window": {
+        "format": "{}",
+        "max-length": 45,
+        "separate-outputs": true
+    },
 
-	"custom/logo": {
-		"format": "",
-		"tooltip": false,
-		"on-click": "fuzzel"
-	},
-	"custom/vpn": {
-		"exec":
-		"~/.config/waybar/scripts/vpn.sh",
-		"interval":10
-	},
-"custom/window": {
-		"exec": "~/.config/waybar/scripts/window.sh",
-		"interval": 1,
-		"format": "{}"
-	}
+    "clock": {
+        "format": "{:%a %d %b %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "network": {
+	    "format-wifi": "󰤨  {essid}",
+	    "format-ethernet": "󰈀 Ethernet",
+	    "format-disconnected": "󰤭 Disconnected",
+	    "tooltip-format": "{ifname} via {gwaddr}",
+	    "on-click": "nm-connection-editor"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Muted",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁼", "󰁽", "󰁞", "󰁿", "󰂁", "󰂂", "󰁹"]
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 12
+    },
+
+    "custom/logo": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "fuzzel"
+    },
+
+    "custom/vpn": {
+        "exec": "~/.config/waybar/scripts/vpn.sh",
+        "interval": 5
+    },
+
+    // Конфигурация кнопки питания в углу
+    "custom/power": {
+        "format": "󰐥", // если используешь Nerd Fonts
+        "tooltip": false,
+        "on-click": "~/.config/waybar/scripts/power-menu.sh"// При клике открывается красивое меню
+    }
 }
