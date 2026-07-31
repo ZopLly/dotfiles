@@ -1,0 +1,144 @@
+@import "theme_colors";
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", sans-serif;
+  font-size: 13px;
+}
+
+.control-center-box {
+  background-color: $bg;
+  color: $fg;
+  border: 2px solid $border;
+  border-radius: 20px;
+  padding: 16px;
+}
+
+// 1. Плитки Wi-Fi / BT
+.quick-settings-row {
+  .btn-tile {
+    background-color: $surface;
+    color: $subtext;
+    border-radius: 14px;
+    padding: 12px;
+    min-width: 130px;
+
+    &:hover {
+      background-color: $overlay;
+      color: $fg;
+    }
+
+    .icon {
+      font-size: 16px;
+      color: $accent;
+    }
+  }
+}
+
+// 2. Слайдеры (Яркость и Громкость)
+.slider-row {
+  background-color: $surface;
+  border-radius: 14px;
+  padding: 8px 14px;
+
+  .slider-icon {
+    font-size: 16px;
+    color: $accent;
+    min-width: 20px;
+  }
+
+  scale.app-slider {
+    trough {
+      background-color: $overlay;
+      border-radius: 8px;
+      min-height: 8px;
+      min-width: 210px;
+    }
+    highlight {
+      background-color: $accent;
+      border-radius: 8px;
+    }
+    slider {
+      background-color: $fg;
+      border-radius: 50%;
+      min-height: 18px;
+      min-width: 18px;
+      margin: -5px;
+    }
+  }
+}
+
+// 3. Карточка Плеера
+.media-card {
+  background-color: $surface;
+  border-radius: 14px;
+  padding: 12px;
+
+  .track-title {
+    font-weight: bold;
+    color: $fg;
+    font-size: 14px;
+  }
+
+  .track-artist {
+    color: $subtext;
+    font-size: 12px;
+  }
+
+  .media-controls {
+    margin-top: 4px;
+    .media-btn {
+      background-color: $overlay;
+      color: $fg;
+      border-radius: 50%;
+      font-size: 16px;
+      min-width: 36px;
+      min-height: 36px;
+
+      &:hover {
+        background-color: $accent;
+        color: $bg;
+      }
+
+      &.play {
+        background-color: $accent;
+        color: $bg;
+        min-width: 42px;
+        min-height: 42px;
+        &:hover {
+          background-color: $fg;
+        }
+      }
+    }
+  }
+}
+
+// 4. Кнопки Питания
+.power-row {
+  .btn-power {
+    background-color: $surface;
+    color: $fg;
+    border-radius: 12px;
+    font-size: 18px;
+    padding: 10px;
+
+    &:hover {
+      background-color: $overlay;
+    }
+
+    &.shutdown:hover {
+      background-color: #f38ba8; // Красный при наведении на выключение
+      color: #11111b;
+    }
+
+    &.reboot:hover {
+      background-color: #fab387; // Оранжевый на перезагрузку
+      color: #11111b;
+    }
+
+    &.lock:hover {
+      background-color: $accent;
+      color: $bg;
+    }
+  }
+}

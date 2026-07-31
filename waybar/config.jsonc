@@ -72,7 +72,7 @@
     },
 
     "custom/logo": {
-        "format": "",
+        "format": "",
         "tooltip": false,
         "on-click": "fuzzel"
     },
