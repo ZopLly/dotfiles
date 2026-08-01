@@ -1,52 +1,94 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# 1. Пути к папкам
-THEMES_DIR="$HOME/dotfiles/assets/themes"
+# ==============================================================================
+# Monolithic Theme Switcher for Niri, Waybar, Eww, Alacritty, Mako, Cava, GTK & Awww
+# ==============================================================================
+
+DOTFILES="$HOME/dotfiles"
+THEMES_DIR="$DOTFILES/assets/themes"
 CURRENT_LINK="$THEMES_DIR/current"
 
-# 2. Если аргумент не передан, запрашиваем тему через Fuzzel
-SELECTED_THEME="$1"
+# ------------------------------------------------------------------------------
+# 1. Меню выбора темы (Fuzzel)
+# ------------------------------------------------------------------------------
+SELECTED_THEME=$(find "$THEMES_DIR" -maxdepth 1 -mindepth 1 -type d ! -name "current" -exec basename {} \; | sort | fuzzel --dmenu -p "🎨 Выберите тему: ")
 
+# Выход, если пользователь закрыл меню
 if [ -z "$SELECTED_THEME" ]; then
-    # Находим все папки в THEMES_DIR, убираем путь и папку 'current', передаем в fuzzel
-    SELECTED_THEME=$(ls -d $THEMES_DIR/*/ | xargs -n 1 basename | grep -v "^current$" | fuzzel --dmenu -p "Выберите тему: ")
-fi
-
-# Если пользователь закрыл Fuzzel (нажал Esc), ничего не делаем
-if [ -z "$SELECTED_THEME" ]; then
-    echo "Отмена выбора темы."
     exit 0
 fi
 
-NEW_THEME="$THEMES_DIR/$SELECTED_THEME"
+TARGET_DIR="$THEMES_DIR/$SELECTED_THEME"
 
-# 3. Проверяем, существует ли выбранная тема
-if [ ! -d "$NEW_THEME" ]; then
-    echo "Ошибка: Тема '$SELECTED_THEME' не найдена в $THEMES_DIR"
+if [ ! -d "$TARGET_DIR" ]; then
+    notify-send "Theme Switcher" "Ошибка: папка $SELECTED_THEME не найдена"
     exit 1
 fi
 
-# 4. Переключаем симлинк на новую тему
-rm -f "$CURRENT_LINK"
-ln -s "$NEW_THEME" "$CURRENT_LINK"
+# ------------------------------------------------------------------------------
+# 2. Мгновенное переключение единого симлинка 'current'
+# ------------------------------------------------------------------------------
+ln -sfn "$TARGET_DIR" "$CURRENT_LINK"
 
-echo "Тема переключена на: $SELECTED_THEME"
+# ------------------------------------------------------------------------------
+# 3. Обои (Awww)
+# ------------------------------------------------------------------------------
+WALLPAPER=$(find "$TARGET_DIR" -maxdepth 1 -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" \) | head -n 1)
 
-# 5. Ищем и устанавливаем обои через awww
-if [ -f "$CURRENT_LINK/wallpaper.gif" ]; then
-    awww img "$CURRENT_LINK/wallpaper.gif" --transition-type outer
-elif [ -f "$CURRENT_LINK/wallpaper.png" ]; then
-    awww img "$CURRENT_LINK/wallpaper.png" --transition-type outer
-elif [ -f "$CURRENT_LINK/wallpaper.jpg" ]; then
-    awww img "$CURRENT_LINK/wallpaper.jpg" --transition-type outer
-elif [ -f "$CURRENT_LINK/wallpaper.jpeg" ]; then
-    awww img "$CURRENT_LINK/wallpaper.jpeg" --transition-type outer
-else
-    echo "Предупреждение: Файл обоев не найден в папке темы!"
+if [ -n "$WALLPAPER" ]; then
+    if command -v awww &>/dev/null; then
+        awww img "$WALLPAPER" 2>/dev/null
+    fi
 fi
 
-# 6. Обновляем конфиги приложений
-touch "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null
-touch "$HOME/.config/waybar/style.css" 2>/dev/null
-pkill -SIGUSR2 waybar
-niri msg action reload-config 2>/dev/null
+# ------------------------------------------------------------------------------
+# 4. GTK & Libadwaita (Цветовая схема и темы)
+# ------------------------------------------------------------------------------
+# Проверяем, есть ли кастомное название GTK темы в папке с темой
+if [ -f "$TARGET_DIR/gtk-theme.txt" ]; then
+    GTK_THEME=$(cat "$TARGET_DIR/gtk-theme.txt" | xargs)
+    gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME" 2>/dev/null || true
+fi
+
+# Устанавливаем светлый/темный режим для GTK/Qt/VSCode/Браузеров
+if [[ "$SELECTED_THEME" == *"light"* ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' 2>/dev/null || true
+else
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+fi
+
+# ------------------------------------------------------------------------------
+# 5. Перезагрузка и горячее обновление демонов
+# ------------------------------------------------------------------------------
+
+# Mako (Уведомления)
+if pgrep -x "mako" > /dev/null; then
+    makoctl reload 2>/dev/null || true
+fi
+
+# Cava (Аудио визуализатор)
+if pgrep -x "cava" > /dev/null; then
+    pkill -USR1 cava 2>/dev/null || true
+fi
+
+# Waybar (Статус-бар)
+if pgrep -x "waybar" > /dev/null; then
+    pkill -SIGUSR2 waybar 2>/dev/null || true
+fi
+
+# Eww (Виджеты)
+if command -v eww &>/dev/null; then
+    eww reload 2>/dev/null || true
+fi
+
+# Niri (Оконный менеджер)
+if command -v niri &>/dev/null && pgrep -x "niri" > /dev/null; then
+    niri msg action reload-config 2>/dev/null || true
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Системное уведомление
+# ------------------------------------------------------------------------------
+if command -v notify-send &>/dev/null; then
+    notify-send -u low -i preferences-desktop-theme "Theme Switcher" "Тема успешно изменена на <b>$SELECTED_THEME</b>"
+fi

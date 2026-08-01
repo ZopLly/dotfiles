@@ -1,4 +1,4 @@
-w#!/bin/bash
+#!/bin/bash
 
 if tailscale status >/dev/null 2>&1; then
     echo "󰒘 VPN"
