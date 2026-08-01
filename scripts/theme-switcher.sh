@@ -92,3 +92,18 @@ fi
 if command -v notify-send &>/dev/null; then
     notify-send -u low -i preferences-desktop-theme "Theme Switcher" "Тема успешно изменена на <b>$SELECTED_THEME</b>"
 fi
+#------------------------------------------
+# 7. niri switch
+# ----------------------------------------
+if command -v niri &>/dev/null && pgrep -x "niri" > /dev/null; then
+    # Пример: задаем акцентный цвет для Gruvbox / Catppuccin
+    case "$SELECTED_THEME" in
+        "gruvbox-dark")      COLOR="#fe8019" ;;
+        "catppuccin-mocha")  COLOR="#cba6f7" ;;
+        "tokyo-night")       COLOR="#7aa2f7" ;;
+        *)                   COLOR="#7fa6e1" ;;
+    esac
+    
+    # Отправляем цвет рамки напрямую в работающий Niri
+    niri msg action set-dynamic-config --focus-ring-active-color "$COLOR" 2>/dev/null || niri msg action reload-config 2>/dev/null
+fi
