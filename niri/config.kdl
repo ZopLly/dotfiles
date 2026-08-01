@@ -24,6 +24,9 @@ input {
         // Enable numlock on startup, omitting this setting disables it.
         numlock
     }
+    // Если не хочешь, чтобы фокус прыгал при скролле рамок:
+    // focus-follows-mouse
+    focus-follows-mouse max-scroll-amount="40%" 
 
     // Next sections include libinput settings.
     // Omitting settings disables them, or leaves them at their default values.
@@ -160,8 +163,8 @@ layout {
 
         // How many logical pixels the ring extends out from the windows.
         width 2
-	active-color "#007AFF" // Классический синий акцент Apple
-        inactive-color "#ffffff10"
+	active-color "#89b4fa" // Классический синий акцент Apple
+        inactive-color "#89b4fa"
 
         // Colors can be set in a variety of ways:
         // - CSS named colors: "red"
@@ -199,8 +202,8 @@ layout {
         off
 
         width 4
-        active-color "#ffc87f"
-        inactive-color "#505050"
+        active-color "#89b4fa"
+        inactive-color "#89b4fa"
 
         // Color of the border around windows that request your attention.
         urgent-color "#9b0000"

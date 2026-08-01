@@ -1,41 +1,40 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Набор символов для верхней части (растут снизу вверх)
-bar_up=(" " " " "▂" "▃" "▄" "▅" "▆" "▇" "█")
-
-# Набор символов для нижней части (растут сверху вниз)
-bar_down=(" " "▔" "🮂" "🮃" "▀" "▔" "🮀" "🮁" "█")
-
-pipe="/tmp/cava_fifo"
-[ -p $pipe ] || mkfifo $pipe
-
-config_file="/tmp/cava_config"
-cat <<EOF > $config_file
+config_file="/tmp/waybar_cava_config"
+cat <<EOF > "$config_file"
 [general]
-bars = 12
-sleep_timer = 2
+bars = 10
+sleep_timer = 1
+
+[input]
+method = pulse
 
 [output]
 method = raw
-raw_target = $pipe
+raw_target = /dev/stdout
 data_format = ascii
-ascii_max_range = 8
+ascii_max_range = 7
 EOF
 
-cava -p $config_file &
+# Символы колонок (от меньшего к большему)
+dict=(" " " " "▂" "▃" "▄" "▅" "▆" "▇" "█")
 
-while read -r line; do
-    top_line=""
-    bot_line=""
-    for (( i=0; i<${#line}; i++ )); do
-        val="${line:$i:1}"
-        if [ "$val" -ge 0 ] 2>/dev/null; then
-            top_line+="${bar_up[$val]}"
-            bot_line+="${bar_down[$val]}"
+# Убиваем застрявшие фоновые процессы cava
+pkill -f "cava -p $config_file" 2>/dev/null
+
+cava -p "$config_file" | while read -r line; do
+    IFS=';' read -ra BARS <<< "$line"
+    res=""
+    for val in "${BARS[@]}"; do
+        if [[ "$val" =~ ^[0-9]+$ ]] && [ "$val" -lt 8 ]; then
+            res+="${dict[$val]}"
         fi
     done
-
-    # Вывод с двухстрочным вертикальным выравниванием (если поддерживает шрифт)
-    # или красивой зеркальной суммой:
-    echo "{\"text\": \"$top_line\n$bot_line\"}"
-done < $pipe
+    
+    # Показываем эквалайзер при звуке, либо нотку в тишине
+    if [[ -n "$res" && "$res" != "          " ]]; then
+        echo "$res"
+    else
+        echo "󰎈"
+    fi
+done

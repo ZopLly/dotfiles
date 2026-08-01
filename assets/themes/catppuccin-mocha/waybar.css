@@ -1,48 +1,8 @@
-* {
-    border: none;
-    border-radius: 0;
-    font-family: "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 11px;
-    min-height: 0;
-}
-
-window#waybar {
-    background-color: rgba(30, 30, 46, 0.85);
-    color: #cdd6f4;
-    border-bottom: 1px solid #45475a;
-}
-
-#workspaces,
-#window,
-#clock,
-#custom-cava,
-#tray,
-#language,
-#battery,
-#custom-control-center {
-    background-color: #313244;
-    color: #cdd6f4;
-    padding: 2px 10px;
-    margin: 3px 2px;
-    border-radius: 8px;
-}
-
-#workspaces button {
-    padding: 0 6px;
-    color: #a6adc8;
-    border-radius: 6px;
-}
-
-#workspaces button.active {
-    background-color: #cba6f7;
-    color: #1e1e2e;
-    font-weight: bold;
-}
-
-#custom-control-center {
-    background-color: #cba6f7;
-    color: #1e1e2e;
-    font-weight: bold;
-    padding: 2px 8px;
-    margin-right: 6px;
-}
+@define-color bg #1e1e2e;
+@define-color fg #cdd6f4;
+@define-color fg_dim #6c7086;
+@define-color bg_modules #11111b;
+@define-color accent #89b4fa;
+@define-color cava_color #a6e3a1;
+@define-color clock_color #f9e2af;
+@define-color power_color #f38ba8;

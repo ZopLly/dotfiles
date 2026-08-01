@@ -92,18 +92,27 @@ fi
 if command -v notify-send &>/dev/null; then
     notify-send -u low -i preferences-desktop-theme "Theme Switcher" "Тема успешно изменена на <b>$SELECTED_THEME</b>"
 fi
-#------------------------------------------
-# 7. niri switch
-# ----------------------------------------
-if command -v niri &>/dev/null && pgrep -x "niri" > /dev/null; then
-    # Пример: задаем акцентный цвет для Gruvbox / Catppuccin
+# ------------------------------------------------------------------------------
+# 7. Niri (Автоматическая замена цвета рамки фокуса в config.kdl)
+# ------------------------------------------------------------------------------
+NIRI_CONF="$HOME/.config/niri/config.kdl"
+
+if [ -f "$NIRI_CONF" ]; then
     case "$SELECTED_THEME" in
-        "gruvbox-dark")      COLOR="#fe8019" ;;
-        "catppuccin-mocha")  COLOR="#cba6f7" ;;
-        "tokyo-night")       COLOR="#7aa2f7" ;;
-        *)                   COLOR="#7fa6e1" ;;
+        "gruvbox-dark")      ACCENT="#fe8019" ;;
+        "catppuccin-mocha")  ACCENT="#89b4fa" ;;
+        "tokyo-night")       ACCENT="#7aa2f7" ;;
+        *)                   ACCENT="#89b4fa" ;;
     esac
-    
-    # Отправляем цвет рамки напрямую в работающий Niri
-    niri msg action set-dynamic-config --focus-ring-active-color "$COLOR" 2>/dev/null || niri msg action reload-config 2>/dev/null
+
+    # Меняем значение active-color в файле config.kdl
+    sed -i -E "s/(active-color|active-gradient)[[:space:]]+\"[^\"]+\"/\1 \"$ACCENT\"/g" "$NIRI_CONF"
 fi
+# ------------------------------------------------------------------------------
+# 8. Alacritty Theme Switch
+# ------------------------------------------------------------------------------
+# Привязываем theme.toml к теме
+ln -sfn "$HOME/dotfiles/assets/themes/$SELECTED_THEME/alacritty.toml" "$HOME/.config/alacritty/theme.toml"
+
+# Принудительно обновляем дату файла, чтобы inotify разбудил открытые терминалы
+touch "$HOME/.config/alacritty/alacritty.toml"

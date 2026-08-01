@@ -1,26 +1,57 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 30,
+    "height": 28,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
 
     "modules-left": [
-        "custom/logo",
+        "custom/launcher",
         "niri/workspaces",
         "niri/window"
     ],
 
     "modules-center": [
-        "clock"
+        "clock",
+	"mpris",
+	"custom/cava"
     ],
 
     "modules-right": [
-	"network",
-        "custom/vpn",
+	"tray",
 	"niri/language",
-	"pulseaudio",
+	"wireplumber",
         "battery",
-        "custom/power" // <-- Добавлена кнопка питания
+        "custom/power"
     ],
+    // Звук
+    "wireplumber": {
+	    "format": "{icon} {volume}%",
+	    "format-muted": "󰝟 Mute",
+	    "format-icons": ["󰕿", "󰖀", "󰕾"],
+	    "on-click": "pavucontrol"
+    },
+    // 3. Играющая песня / видео (MPRIS)
+    "mpris": {
+	    "format": "{player_icon} {title} - {artist}",
+	    "format-paused": "󰏤 <i>{title}</i>",
+	    "player-icons": {
+		    "default": "󰎈",
+		    "spotify": "󰓇",
+		    "firefox": "󰈹",
+		    "chromium": "󰊯",
+		    "mpv": "󰐍"
+	    },
+	    "max-length": 30,
+	    "interval": 1
+    },
+
+    // 4. Эквалайзер CAVA
+    "custom/cava": {
+	    "exec": "~/.config/waybar/scripts/cava.sh",
+	    "format": "{}"
+    },
 
     "niri/language": {
         "format": "{}",

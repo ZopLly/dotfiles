@@ -1,89 +1,96 @@
 @import "theme_colors.css";
+
 * {
     border: none;
     border-radius: 0;
-    font-family: "SF Pro Display", "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", sans-serif;
+    font-weight: bold;
     font-size: 13px;
-    font-weight: 500;
+    min-height: 0;
 }
 
 window#waybar {
-    background-color: rgba(30, 30, 30, 0.75);
-    color: #ffffff;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
-/* Иконка Меню / Логотип */
-#custom-logo {
-    font-size: 16px;
-    padding: 0 10px 0 14px;
-    color: #ffffff;
+/* Применяем стиль островка ВСЕМ модулям Waybar без исключений */
+.module,
+#custom-launcher,
+#workspaces,
+#mpris,
+#custom-cava,
+#clock,
+#tray,
+#wireplumber,
+#network,
+#battery,
+#custom-power,
+#niri-window,
+.niri-window
+#niri-language,
+.niri-language {
+    background-color: @bg_modules;
+    color: @fg;
+    padding: 3px 12px;
+    margin: 3px 3px;
+    border-radius: 14px;
 }
 
-/* Рабочие пространства */
-#workspaces {
-    background: rgba(255, 255, 255, 0.1);
-    margin: 3px 6px;
-    padding: 0 4px;
+/* Когда нет активного окна — прячем пустую рамку */
+#niri-window.empty {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* Оформление текста активного окна */
+#niri-window,
+.niri-window{
+    color: @fg;
+    font-weight: bold;
+}
+
+/* Выделение плашки языка Niri акцентным цветом */
+#niri-language {
+    color: @accent;
+    font-weight: bold;
+}
+
+/* Кнопки рабочих столов */
+#workspaces button {
+    background: transparent;
+    color: @fg_dim;
+    padding: 0 6px;
     border-radius: 8px;
 }
 
-#workspaces button {
-    padding: 0 8px;
-    color: #aaaaaa;
-    border-radius: 6px;
-}
-
 #workspaces button.active {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.25);
+    color: @accent;
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Название текущего окна */
-#window {
-    font-weight: 600;
-    color: #dddddd;
-    padding-left: 10px;
-}
-
-/* ЧАСЫ ПО ЦЕНТРУ (macOS Menu Bar style) */
-#clock {
-    font-weight: 600;
-    color: #ffffff;
-    background: transparent;
-    padding: 0 10px;
-}
-
-/* Правые статус-значки */
-#tray,
-#custom-vpn,
-#network,
-#battery,
-#pulseaudio {
-    padding: 0 8px;
-    margin: 0 2px;
-}
-
-#battery.charging, #battery.plugged {
-    color: #34c759;
-}
-
-#battery.critical:not(.charging) {
-    background-color: #ff3b30;
-    color: #ffffff;
-    border-radius: 4px;
-}
-/* Кнопка питания в правом верхнем углу */
-#custom-power {
-    padding: 0 10px 0 12px;
-    margin-left: 4px;
-    color: #ff3b30; /* Красный системный акцент Apple */
+/* Иконка лаунчера */
+#custom-launcher {
+    background-color: @accent;
+    color: @bg;
     font-size: 15px;
-    font-weight: bold;
-    border-radius: 6px;
-    transition: background 0.2s ease;
+    padding: 3px 12px;
 }
 
-#custom-power:hover {
-    background: rgba(255, 59, 48, 0.2);
+/* Эквалайзер */
+#custom-cava {
+    color: @cava_color;
+    font-size: 13px;
+    letter-spacing: -1px;
 }
+
+/* Часы */
+
+/* Кнопка выключения */
+#custom-power {
+    background-color: @power_color;
+    color: @bg;
+    padding: 3px 10px;
+} 
