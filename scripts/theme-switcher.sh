@@ -62,10 +62,15 @@ fi
 # ------------------------------------------------------------------------------
 
 # Mako (Уведомления)
+# 1. Перенаправляем симлинк конфига на mako.conf из новой темы (если он там есть)
+if [ -f "$TARGET_DIR/mako.conf" ]; then
+    ln -sfn "$TARGET_DIR/mako.conf" "$HOME/.config/mako/config"
+fi
+
+# 2. Твой исходный код: мягко перезагружаем Mako, если демон запущен
 if pgrep -x "mako" > /dev/null; then
     makoctl reload 2>/dev/null || true
 fi
-
 # Cava (Аудио визуализатор)
 if pgrep -x "cava" > /dev/null; then
     pkill -USR1 cava 2>/dev/null || true

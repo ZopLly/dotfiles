@@ -1,0 +1,21 @@
+# Основные параметры внешнего вида
+font=JetBrainsMono Nerd Font 10
+width=320
+height=110
+margin=12
+padding=12
+border-size=2
+border-radius=12
+default-timeout=5000
+anchor=top-right
+
+# Цвета (базовая тёмная тема)
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+progress-color=over #313244
+
+# Настройки для срочных уведомлений
+[urgency=critical]
+border-color=#f38ba8
+default-timeout=0
