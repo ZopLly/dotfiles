@@ -1,4 +1,13 @@
-@import "theme_colors";
+@import "../../.config/waybar/theme_colors.css";
+
+// Мост между GTK CSS (@) и SCSS ($)
+$bg: #{'@bg'};
+$fg: #{'@fg'};
+$border: #{'@border'};
+$surface: #{'@surface'};
+$subtext: #{'@subtext'};
+$overlay: #{'@overlay'};
+$accent: #{'@accent'};
 
 * {
   all: unset;
@@ -6,19 +15,23 @@
   font-size: 13px;
 }
 
+// ============================================
+// 1. БЫСТРЫЕ НАСТРОЙКИ
+// ============================================
 .control-center-box {
   background-color: $bg;
   color: $fg;
   border: 2px solid $border;
   border-radius: 20px;
   padding: 16px;
+  transition: all 200ms ease;
 }
 
-// 1. Плитки Wi-Fi / BT
 .quick-settings-row {
   .btn-tile {
     background-color: $surface;
     color: $subtext;
+    border: 1px solid $border; // <-- Обводка плиток
     border-radius: 14px;
     padding: 12px;
     min-width: 130px;
@@ -26,8 +39,9 @@
     &:hover {
       background-color: $overlay;
       color: $fg;
+      border-color: $accent;
     }
-
+    
     .icon {
       font-size: 16px;
       color: $accent;
@@ -35,110 +49,155 @@
   }
 }
 
-// 2. Слайдеры (Яркость и Громкость)
 .slider-row {
   background-color: $surface;
+  border: 1px solid $border; // <-- Обводка слайдеров
   border-radius: 14px;
   padding: 8px 14px;
-
   .slider-icon {
     font-size: 16px;
     color: $accent;
     min-width: 20px;
   }
+}
 
-  scale.app-slider {
-    trough {
-      background-color: $overlay;
-      border-radius: 8px;
-      min-height: 8px;
-      min-width: 210px;
-    }
-    highlight {
-      background-color: $accent;
-      border-radius: 8px;
-    }
-    slider {
-      background-color: $fg;
-      border-radius: 50%;
-      min-height: 18px;
-      min-width: 18px;
-      margin: -5px;
-    }
+scale.app-slider {
+  trough {
+    background-color: $overlay;
+    border-radius: 8px;
+    min-height: 8px;
+    min-width: 210px;
+  }
+  highlight {
+    background-color: $accent;
+    border-radius: 8px;
+  }
+  slider {
+    background-color: $fg;
+    border-radius: 50%;
+    min-height: 18px;
+    min-width: 18px;
+    margin: -5px;
   }
 }
 
-// 3. Карточка Плеера
-.media-card {
-  background-color: $surface;
-  border-radius: 14px;
-  padding: 12px;
 
-  .track-title {
-    font-weight: bold;
-    color: $fg;
-    font-size: 14px;
-  }
 
-  .track-artist {
-    color: $subtext;
-    font-size: 12px;
-  }
-
-  .media-controls {
-    margin-top: 4px;
-    .media-btn {
-      background-color: $overlay;
-      color: $fg;
-      border-radius: 50%;
-      font-size: 16px;
-      min-width: 36px;
-      min-height: 36px;
-
-      &:hover {
-        background-color: $accent;
-        color: $bg;
-      }
-
-      &.play {
-        background-color: $accent;
-        color: $bg;
-        min-width: 42px;
-        min-height: 42px;
-        &:hover {
-          background-color: $fg;
-        }
-      }
-    }
-  }
-}
-
-// 4. Кнопки Питания
 .power-row {
   .btn-power {
     background-color: $surface;
     color: $fg;
+    border: 1px solid $border;
     border-radius: 12px;
     font-size: 18px;
     padding: 10px;
 
     &:hover {
       background-color: $overlay;
+      border-color: $accent;
     }
 
     &.shutdown:hover {
-      background-color: #f38ba8; // Красный при наведении на выключение
+      background-color: #f38ba8;
       color: #11111b;
     }
 
     &.reboot:hover {
-      background-color: #fab387; // Оранжевый на перезагрузку
+      background-color: #fab387;
       color: #11111b;
     }
 
     &.lock:hover {
       background-color: $accent;
       color: $bg;
+    }
+  }
+}
+
+// ============================================
+// 2. ВСПЛЫВАЮЩИЙ ПЛЕЕР (MEDIA POPUP)
+// ============================================
+.media-popup-box {
+  background-color: $bg;
+  color: $fg;
+  border: 2px solid $border;
+  border-radius: 20px;
+  padding: 16px;
+  transition: all 200ms ease;
+}
+
+.cover-art {
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 12px;
+  background-size: cover;
+  border: 1px solid $border;
+  background-position: center;
+  background-color: $surface;
+}
+
+.media-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: $fg;
+}
+
+.media-artist {
+  font-size: 12px;
+  color: $subtext;
+}
+
+.timeline-box {
+  scale.song-slider {
+    trough {
+      background-color: $overlay;
+      border-radius: 4px;
+      min-height: 6px;
+      min-width: 250px;
+    }
+    highlight {
+      background-color: $accent;
+      border-radius: 4px;
+    }
+    slider {
+      background-color: $fg;
+      border-radius: 50%;
+      min-height: 12px;
+      min-width: 12px;
+      margin: -3px;
+    }
+  }
+  .time-label {
+    font-size: 10px;
+    color: $subtext;
+  }
+}
+
+.media-controls {
+  margin-top: 4px;
+  .media-btn {
+    background-color: $overlay;
+    color: $fg;
+    border: 1px solid $border;
+    border-radius: 50%;
+    font-size: 16px;
+    min-width: 36px;
+    min-height: 36px;
+
+    &:hover {
+      background-color: $accent;
+      color: $bg;
+      border-color: $accent;
+    }
+
+    &.play {
+      background-color: $accent;
+      color: $bg;
+      min-width: 42px;
+      min-height: 42px;
+      &:hover {
+        background-color: $fg;
+      }
     }
   }
 }

@@ -23,6 +23,7 @@
 	"niri/language",
 	"wireplumber",
         "battery",
+	"custom/quicksettings",
         "custom/power"
     ],
     // Звук
@@ -34,24 +35,32 @@
     },
     // 3. Играющая песня / видео (MPRIS)
     "mpris": {
-	    "format": "{player_icon} {title} - {artist}",
-	    "format-paused": "󰏤 <i>{title}</i>",
-	    "player-icons": {
-		    "default": "󰎈",
-		    "spotify": "󰓇",
-		    "firefox": "󰈹",
-		    "chromium": "󰊯",
-		    "mpv": "󰐍"
-	    },
-	    "max-length": 30,
-	    "interval": 1
+    "format": "{player_icon} {title} - {artist}",
+    "format-paused": "󰏤 <i>{title}</i>",
+    "player-icons": {
+        "default": "󰎈",
+        "spotify": "󰓇",
+        "firefox": "󰈹",
+        "chromium": "󰊯",
+        "mpv": "󰐍"
     },
+    "max-length": 30,
+    "interval": 1,
+    "on-click": "~/.config/eww/scripts/toggle-win.sh media_popup" // <-- Вызов отдельного окна плеера
+},
 
     // 4. Эквалайзер CAVA
     "custom/cava": {
 	    "exec": "~/.config/waybar/scripts/cava.sh",
 	    "format": "{}"
     },
+    // 5. Быстрая настройка
+    "custom/quicksettings": {
+	    "format": "󰍜",
+	    "tooltip": false,
+	    "on-click": "~/.config/eww/scripts/toggle-win.sh control_center"
+    },
+
 
     "niri/language": {
         "format": "{}",
@@ -66,15 +75,8 @@
 
     "clock": {
         "format": "{:%a %d %b %H:%M}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
-    },
-
-    "network": {
-	    "format-wifi": "󰤨  {essid}",
-	    "format-ethernet": "󰈀 Ethernet",
-	    "format-disconnected": "󰤭 Disconnected",
-	    "tooltip-format": "{ifname} via {gwaddr}",
-	    "on-click": "nm-connection-editor"
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+	"on-click": "gsimplecal"
     },
 
     "pulseaudio": {
@@ -100,17 +102,6 @@
     "tray": {
         "icon-size": 18,
         "spacing": 12
-    },
-
-    "custom/logo": {
-        "format": "",
-        "tooltip": false,
-        "on-click": "fuzzel"
-    },
-
-    "custom/vpn": {
-        "exec": "~/.config/waybar/scripts/vpn.sh",
-        "interval": 5
     },
 
     // Конфигурация кнопки питания в углу

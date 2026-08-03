@@ -1,80 +1,176 @@
-;; Переменные 
-(defpoll volume :interval "1s" "pamixer --get-volume 2>/dev/null || echo 50")
+;; ============================================
+;; 1. ПЕРЕМЕННЫЕ
+;; ============================================
+;; Переменные Центра управления (Quick Settings)
+(defpoll volume     :interval "1s" "pamixer --get-volume 2>/dev/null || echo 50")
 (defpoll brightness :interval "1s" "brightnessctl -m | cut -d, -f4 | tr -d '%' 2>/dev/null || echo 50")
-(defpoll track_title :interval "1s" "playerctl metadata --format '{{ title }}' 2>/dev/null || echo 'Нет музыки'")
-(defpoll track_artist :interval "1s" "playerctl metadata --format '{{ artist }}' 2>/dev/null || echo 'Остановлено'")
+(defvar  open_cc    true)
 
-;; Главный виджет шторки
+;; Переменные Плеера (Media Popup)
+(defpoll track_title   :interval "1s" "playerctl metadata --format '{{ title }}' 2>/dev/null || echo 'Нет музыки'")
+(defpoll track_artist  :interval "1s" "playerctl metadata --format '{{ artist }}' 2>/dev/null || echo 'Остановлено'")
+(defpoll play_status   :interval "1s" "playerctl status 2>/dev/null || echo 'Paused'")
+(defpoll cover_art     :interval "1s" "~/.config/eww/scripts/get-cover.sh")
+
+;; Время и позиция трека
+(defpoll song_pos      :interval "1s" "playerctl position 2>/dev/null | cut -d. -f1 || echo 0")
+(defpoll song_length   :interval "1s" "playerctl metadata mpris:length 2>/dev/null | awk '{print int($1/1000000)}' || echo 100")
+(defpoll song_pos_fmt  :interval "1s" "playerctl position --format '{{ duration(position) }}' 2>/dev/null || echo '0:00'")
+(defpoll song_len_fmt  :interval "1s" "playerctl metadata --format '{{ duration(mpris:length) }}' 2>/dev/null || echo '0:00'")
+
+
+;; ============================================
+;; 2. ВИДЖЕТ БЫСТРЫХ НАСТРОЕК (CONTROL CENTER)
+;; ============================================
 (defwidget control_center_widget []
-  (box :class "control-center-box"
-       :orientation "v"
-       :space-evenly false
-       :spacing 12
+  (revealer :transition "slidedown"
+            :reveal open_cc
+            :duration "350ms"
+    (box :class "control-center-box"
+         :orientation "v"
+         :space-evenly false
+         :spacing 12
 
-    ;; 1. Быстрые переключатели
-    (box :class "quick-settings-row"
-         :orientation "h"
-         :space-evenly true
-         :spacing 10
-      (button :class "btn-tile wifi" :onclick "nm-connection-editor &"
-        (box :orientation "h" :space-evenly false :spacing 8 :halign "center"
-          (label :class "icon" :text "󰖩")
-          (label :text "Wi-Fi")))
-      (button :class "btn-tile bluetooth" :onclick "blueman-manager &"
-        (box :orientation "h" :space-evenly false :spacing 8 :halign "center"
-          (label :class "icon" :text "󰂯")
-          (label :text "Bluetooth")))
-    )
-
-    ;; 2. Слайдер Яркости
-    (box :class "slider-row" :orientation "h" :space-evenly false :spacing 10
-      (label :class "slider-icon" :text "󰃠")
-      (scale :class "app-slider"
-             :min 10
-             :max 100
-             :value brightness
-             :onchange "brightnessctl set {}%")
-    )
-
-    ;; 3. Слайдер Громкости
-    (box :class "slider-row" :orientation "h" :space-evenly false :spacing 10
-      (label :class "slider-icon" :text "󰕾")
-      (scale :class "app-slider"
-             :min 0
-             :max 100
-             :value volume
-             :onchange "pamixer --set-volume {}")
-    )
-
-    ;; 4. Плеер
-    (box :class "media-card" :orientation "v" :space-evenly false :spacing 8
-      (box :orientation "v" :space-evenly false :halign "center"
-        (label :class "track-title" :limit-width 25 :text track_title)
-        (label :class "track-artist" :limit-width 30 :text track_artist)
+      ;; Быстрые переключатели
+      (box :class "quick-settings-row"
+           :orientation "h"
+           :space-evenly true
+           :spacing 10
+        (button :class "btn-tile wifi" :onclick "nm-connection-editor &"
+          (box :orientation "h" :space-evenly false :spacing 8 :halign "center"
+            (label :class "icon" :text "󰖩")
+            (label :text "Wi-Fi")))
+        (button :class "btn-tile bluetooth" :onclick "blueman-manager &"
+          (box :orientation "h" :space-evenly false :spacing 8 :halign "center"
+            (label :class "icon" :text "󰂯")
+            (label :text "Bluetooth")))
       )
-      (box :class "media-controls" :orientation "h" :space-evenly true
-        (button :class "media-btn" :onclick "playerctl previous" "󰒮")
-        (button :class "media-btn play" :onclick "playerctl play-pause" "󰐊")
-        (button :class "media-btn" :onclick "playerctl next" "󰒭")
-      )
-    )
 
-    ;; 5. Кнопки питания
-    (box :class "power-row" :orientation "h" :space-evenly true :spacing 8
-      (button :class "btn-power lock" :onclick "swaylock &" "󰌾")
-      (button :class "btn-power reboot" :onclick "systemctl reboot" "󰜉")
-      (button :class "btn-power shutdown" :onclick "systemctl poweroff" "󰐥")
+      ;; Слайдер Яркости
+      (box :class "slider-row" :orientation "h" :space-evenly false :spacing 10
+        (label :class "slider-icon" :text "󰃠")
+        (scale :class "app-slider"
+               :min 10
+               :max 100
+               :value brightness
+               :onchange "brightnessctl set {}%")
+      )
+
+      ;; Слайдер Громкости
+      (box :class "slider-row" :orientation "h" :space-evenly false :spacing 10
+        (label :class "slider-icon" :text "󰕾")
+        (scale :class "app-slider"
+               :min 0
+               :max 100
+               :value volume
+               :onchange "pamixer --set-volume {}")
+      )
+
+      ;; Кнопки питания
+      (box :class "power-row" :orientation "h" :space-evenly true :spacing 8
+        (button :class "btn-power lock" :onclick "swaylock &" "󰌾")
+        (button :class "btn-power reboot" :onclick "systemctl reboot" "󰜉")
+        (button :class "btn-power shutdown" :onclick "systemctl poweroff" "󰐥")
+      )
     )
   )
 )
 
-;; Окно
+
+;; ============================================
+;; 3. ВИДЖЕТ МЕДИА-ПЛЕЕРА (MEDIA POPUP)
+;; ============================================
+(defwidget media_popup_widget []
+  (revealer :transition "slidedown"
+            :reveal true
+            :duration "350ms"
+    (box :class "media-popup-box"
+         :orientation "v"
+         :space-evenly false
+         :spacing 10
+
+      ;; 1. Крупная обложка по центру
+      (box :class "cover-art-container"
+           :halign "center"
+        (image :class "cover-art"
+               :path cover_art
+               :image-width 180
+               :image-height 180)
+      )
+
+      ;; 2. Название песни и исполнитель
+      (box :orientation "v" :space-evenly false :halign "center" :spacing 2
+        (label :class "media-title" :limit-width 24 :text track_title)
+        (label :class "media-artist" :limit-width 28 :text track_artist)
+      )
+
+      ;; 3. Ползунок времени (Seekbar)
+      (box :class "timeline-box" :orientation "v" :space-evenly false :spacing 2
+        (scale :class "song-slider"
+               :min 0
+               :max song_length
+               :value song_pos
+               :onchange "playerctl position {}")
+
+        (box :orientation "h" :space-evenly true
+          (label :class "time-label" :halign "start" :text song_pos_fmt)
+          (label :class "time-label" :halign "end" :text song_len_fmt)
+        )
+      )
+
+      ;; 4. Минималистичные кнопки управления
+      (box :class "media-controls-minimal"
+           :orientation "h"
+           :space-evenly false
+           :halign "center"
+           :spacing 16
+        (button :class "media-btn-min" :onclick "playerctl previous" "󰒮")
+        (button :class "media-btn-min play-min"
+                :onclick "playerctl play-pause"
+                {play_status == "Playing" ? "󰏤" : "󰐊"})
+        (button :class "media-btn-min" :onclick "playerctl next" "󰒭")
+      )
+    )
+  )
+)
+
+
+;; ============================================
+;; 4. ОПИСАНИЕ ОКОН (WINDOWS)
+;; ============================================
+;; Окно Быстрых Настроек
 (defwindow control_center
   :monitor 0
   :geometry (geometry :x "10px"
-                      :y "50px"
+                      :y "8px"
                       :width "340px"
                       :anchor "top right")
   :stacking "fg"
   (control_center_widget)
+)
+
+;; Окно Плеера
+(defwindow media_popup
+  :monitor 0
+  :geometry (geometry :x "0px"
+                      :y "8px"
+                      :width "320px"
+                      :anchor "top center")
+  :stacking "fg"
+  (media_popup_widget)
+)
+
+;; Прозрачная подложка для закрытия по клику
+(defwindow closer
+  :monitor 0
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "100%")
+  :stacking "fg"
+  :focusable false
+  (eventbox
+    :onclick "eww close control_center media_popup closer"
+    (box :style "background: transparent;")
+  )
 )
