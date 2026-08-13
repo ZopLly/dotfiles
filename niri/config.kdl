@@ -161,8 +161,8 @@ layout {
 
         // How many logical pixels the ring extends out from the windows.
         width 2
-	active-color "#89b4fa" // Классический синий акцент Apple
-        inactive-color "#89b4fa"
+	active-color "#fe8019" // Классический синий акцент Apple
+        inactive-color "#fe8019"
 
         // Colors can be set in a variety of ways:
         // - CSS named colors: "red"
@@ -200,8 +200,8 @@ layout {
         off
 
         width 4
-        active-color "#89b4fa"
-        inactive-color "#89b4fa"
+        active-color "#fe8019"
+        inactive-color "#fe8019"
 
         // Color of the border around windows that request your attention.
         urgent-color "#9b0000"
@@ -610,7 +610,7 @@ binds {
 
     // Center all fully visible columns on screen.
     Mod+Ctrl+C { center-visible-columns; }
-
+			
     // Finer width adjustments.
     // This command can also:
     // * set width in pixels: "1000"

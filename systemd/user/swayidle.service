@@ -1,0 +1,11 @@
+[Unit]
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/swayidle -w timeout 650 '/home/andrew/dotfiles/gtklock/scripts/lock.sh' timeout 950 'systemctl suspend' before-sleep '/home/andrew/dotfiles/gtklock/scripts/lock.sh'
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target
