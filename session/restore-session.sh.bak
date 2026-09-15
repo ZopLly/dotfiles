@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SESSION_FILE="$HOME/.local/state/niri-session/session.json"
+
+if [[ ! -f "$SESSION_FILE" ]]; then
+    exit 0
+fi
+
+if ! command -v fuzzel >/dev/null 2>&1; then
+    exit 1
+fi
+
+CHOICE=$(printf 'Restore previous session\nStart fresh\n' | fuzzel --dmenu --prompt="Session: ")
+
+case "$CHOICE" in
+    "Restore previous session")
+        ;;
+    *)
+        exit 0
+        ;;
+esac
+
+mapfile -t APPS < <(
+    jq -r '
+        .[]
+        | [.app_id, .workspace_id]
+        | @tsv
+    ' "$SESSION_FILE"
+)
+
+for entry in "${APPS[@]}"; do
+    IFS=$'\t' read -r APP WORKSPACE <<< "$entry"
+
+    case "$APP" in
+        Alacritty)
+            niri msg action focus-workspace "$WORKSPACE" 2>/dev/null || true
+            alacritty &
+            ;;
+
+        firefox)
+            niri msg action focus-workspace "$WORKSPACE" 2>/dev/null || true
+            firefox &
+            ;;
+
+        Happ)
+            niri msg action focus-workspace "$WORKSPACE" 2>/dev/null || true
+            happ &
+            ;;
+
+        *)
+            echo "Skipping unknown application: $APP"
+            ;;
+    esac
+
+    sleep 0.5
+done

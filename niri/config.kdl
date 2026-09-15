@@ -161,8 +161,8 @@ layout {
 
         // How many logical pixels the ring extends out from the windows.
         width 2
-	active-color "#fe8019" // Классический синий акцент Apple
-        inactive-color "#fe8019"
+	active-color "#89b4fa" // Классический синий акцент Apple
+        inactive-color "#89b4fa"
 
         // Colors can be set in a variety of ways:
         // - CSS named colors: "red"
@@ -200,8 +200,8 @@ layout {
         off
 
         width 4
-        active-color "#fe8019"
-        inactive-color "#fe8019"
+        active-color "#89b4fa"
+        inactive-color "#89b4fa"
 
         // Color of the border around windows that request your attention.
         urgent-color "#9b0000"
@@ -493,8 +493,8 @@ binds {
 
     Mod+Page_Down      { focus-workspace-down; }
     Mod+Page_Up        { focus-workspace-up; }
-    Mod+U              { focus-workspace-down; }
-    Mod+I              { focus-workspace-up; }
+    Mod+I              { focus-workspace-down; }
+    Mod+U              { focus-workspace-up; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
     Mod+Ctrl+U         { move-column-to-workspace-down; }

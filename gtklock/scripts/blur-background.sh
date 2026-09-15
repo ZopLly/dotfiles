@@ -2,7 +2,7 @@
 
 set -e
 
-SOURCE="$HOME/dotfiles/assets/wallpapers/wallpaper.png"
+SOURCE="$HOME/dotfiles/assets/wallpapers/wallpaper.jpg"
 OUTPUT="$HOME/.cache/gtklock-blurred.jpg"
 
 mkdir -p "$HOME/.cache"
