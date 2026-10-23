@@ -2,21 +2,22 @@
 ;; 1. ПЕРЕМЕННЫЕ
 ;; ============================================
 ;; Переменные Центра управления (Quick Settings)
-(defpoll volume     :interval "1s" "pamixer --get-volume 2>/dev/null || echo 50")
-(defpoll brightness :interval "1s" "brightnessctl -m | cut -d, -f4 | tr -d '%' 2>/dev/null || echo 50")
-(defvar  open_cc    true)
+(defpoll volume     :run-while open_cc :interval "1s" "pamixer --get-volume 2>/dev/null || echo 50")
+(defpoll brightness :run-while open_cc :interval "1s" "brightnessctl -m | cut -d, -f4 | tr -d '%' 2>/dev/null || echo 50")
+(defvar open_cc false)
+(defvar media_open false)
 
 ;; Переменные Плеера (Media Popup)
-(defpoll track_title   :interval "1s" "playerctl metadata --format '{{ title }}' 2>/dev/null || echo 'Нет музыки'")
-(defpoll track_artist  :interval "1s" "playerctl metadata --format '{{ artist }}' 2>/dev/null || echo 'Остановлено'")
-(defpoll play_status   :interval "1s" "playerctl status 2>/dev/null || echo 'Paused'")
-(defpoll cover_art     :interval "1s" "~/.config/eww/scripts/get-cover.sh")
+(defpoll track_title   :run-while media_open :interval "1s" "playerctl metadata --format '{{ title }}' 2>/dev/null || echo 'Нет музыки'")
+(defpoll track_artist  :run-while media_open :interval "1s" "playerctl metadata --format '{{ artist }}' 2>/dev/null || echo 'Остановлено'")
+(defpoll play_status   :run-while media_open :interval "1s" "playerctl status 2>/dev/null || echo 'Paused'")
+(defpoll cover_art     :run-while media_open :interval "1s" "/home/andrew/dotfiles/niri-staging/eww/scripts/get-cover.sh")
 
 ;; Время и позиция трека
-(defpoll song_pos      :interval "1s" "playerctl position 2>/dev/null | cut -d. -f1 || echo 0")
-(defpoll song_length   :interval "1s" "playerctl metadata mpris:length 2>/dev/null | awk '{print int($1/1000000)}' || echo 100")
-(defpoll song_pos_fmt  :interval "1s" "playerctl position --format '{{ duration(position) }}' 2>/dev/null || echo '0:00'")
-(defpoll song_len_fmt  :interval "1s" "playerctl metadata --format '{{ duration(mpris:length) }}' 2>/dev/null || echo '0:00'")
+(defpoll song_pos      :run-while media_open :interval "1s" "playerctl position 2>/dev/null | awk '{print int($1); found=1} END {if (!found) print 0}'")
+(defpoll song_length   :run-while media_open :interval "1s" "playerctl metadata mpris:length 2>/dev/null | awk '{print int($1/1000000); found=1} END {if (!found) print 100}'")
+(defpoll song_pos_fmt  :run-while media_open :interval "1s" "playerctl position --format '{{ duration(position) }}' 2>/dev/null || echo '0:00'")
+(defpoll song_len_fmt  :run-while media_open :interval "1s" "playerctl metadata --format '{{ duration(mpris:length) }}' 2>/dev/null || echo '0:00'")
 
 
 ;; ============================================
@@ -68,7 +69,7 @@
 
       ;; Кнопки питания
       (box :class "power-row" :orientation "h" :space-evenly true :spacing 8
-        (button :class "btn-power lock" :onclick "swaylock &" "󰌾")
+        (button :class "btn-power lock" :onclick "/home/andrew/dotfiles/niri-staging/gtklock/scripts/lock.sh &" "󰌾")
         (button :class "btn-power reboot" :onclick "systemctl reboot" "󰜉")
         (button :class "btn-power shutdown" :onclick "systemctl poweroff" "󰐥")
       )
@@ -82,7 +83,7 @@
 ;; ============================================
 (defwidget media_popup_widget []
   (revealer :transition "slidedown"
-            :reveal true
+            :reveal media_open
             :duration "350ms"
     (box :class "media-popup-box"
          :orientation "v"
@@ -170,7 +171,7 @@
   :stacking "fg"
   :focusable false
   (eventbox
-    :onclick "eww close control_center media_popup closer"
+    :onclick "eww --config /home/andrew/dotfiles/niri-staging/eww update open_cc=false media_open=false; eww --config /home/andrew/dotfiles/niri-staging/eww close control_center media_popup closer"
     (box :style "background: transparent;")
   )
 )

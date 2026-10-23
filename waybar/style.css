@@ -28,7 +28,7 @@ window#waybar {
 #battery,
 #custom-power,
 #niri-window,
-.niri-window
+.niri-window,
 #niri-language,
 .niri-language {
     background-color: @bg_modules;

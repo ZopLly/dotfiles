@@ -1,10 +1,9 @@
-// Settings are loaded in order. Backup: config.before-split-20261019.kdl
-include "config.d/10-input.kdl"
-include "config.d/20-outputs.kdl"
-include "config.d/30-layout.kdl"
-include "config.d/40-startup.kdl"
-include "config.d/50-session.kdl"
-include "config.d/60-animations.kdl"
-include "config.d/70-window-rules.kdl"
-include "config.d/80-binds.kdl"
-
+// Ordered includes; theme overrides are last in appearance.kdl.
+include "conf.d/input.kdl"
+include "conf.d/outputs.kdl"
+include "conf.d/layout.kdl"
+include "conf.d/animations.kdl"
+include "conf.d/window-rules.kdl"
+include "conf.d/autostart.kdl"
+include "conf.d/binds.kdl"
+include "conf.d/appearance.kdl"

@@ -1,0 +1,9 @@
+// autostart — managed module
+
+spawn-sh-at-startup "exec \"${XDG_CONFIG_HOME:-$HOME/.config}/niri/runtime.sh\" shell-start"
+spawn-at-startup "mako"
+spawn-sh-at-startup "exec \"${XDG_CONFIG_HOME:-$HOME/.config}/niri/runtime.sh\" blur"
+spawn-sh-at-startup "exec \"${XDG_CONFIG_HOME:-$HOME/.config}/niri/runtime.sh\" session"
+spawn-sh-at-startup "exec \"${XDG_CONFIG_HOME:-$HOME/.config}/niri/runtime.sh\" wallpaper"
+
+spawn-at-startup "systemctl" "--user" "start" "swayidle.service"

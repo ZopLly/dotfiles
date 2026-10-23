@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "legacy": [
+    {
+      "id": "legacy:ancient-odyssey",
+      "label": "Ancient Odyssey",
+      "group": "legacy",
+      "directory": "assets/themes/ancient-odyssey",
+      "modes": [
+        null
+      ],
+      "accents": [],
+      "adapted_modes": []
+    },
+    {
+      "id": "legacy:catppuccin-mocha",
+      "label": "Catppuccin Mocha",
+      "group": "legacy",
+      "directory": "assets/themes/catppuccin-mocha",
+      "modes": [
+        null
+      ],
+      "accents": [],
+      "adapted_modes": []
+    },
+    {
+      "id": "legacy:gruvbox-dark",
+      "label": "Gruvbox Dark",
+      "group": "legacy",
+      "directory": "assets/themes/gruvbox-dark",
+      "modes": [
+        null
+      ],
+      "accents": [],
+      "adapted_modes": []
+    },
+    {
+      "id": "legacy:tokyo-night",
+      "label": "Tokyo Night",
+      "group": "legacy",
+      "directory": "assets/themes/tokyo-night",
+      "modes": [
+        null
+      ],
+      "accents": [],
+      "adapted_modes": []
+    }
+  ],
+  "wallpapers": [
+    {
+      "id": "wallpaper:7f8fa358c343170444853e38fec81d4fe923e5028cc3ddbb1319d894b34969d8",
+      "sha256": "7f8fa358c343170444853e38fec81d4fe923e5028cc3ddbb1319d894b34969d8",
+      "bytes": 265473,
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "file": "assets/wallpapers/library/7f8fa358c343170444853e38fec81d4fe923e5028cc3ddbb1319d894b34969d8.jpg",
+      "label": "Прежние обои · лес",
+      "group": "legacy",
+      "origin": "wallpaper.jpg"
+    },
+    {
+      "id": "wallpaper:70b9871e971d10aec395b7498f89b6b196c2d376f04781123e9c5c9d52db963a",
+      "sha256": "70b9871e971d10aec395b7498f89b6b196c2d376f04781123e9c5c9d52db963a",
+      "bytes": 368114,
+      "width": 2064,
+      "height": 1296,
+      "frames": 1,
+      "file": "assets/wallpapers/library/70b9871e971d10aec395b7498f89b6b196c2d376f04781123e9c5c9d52db963a.jpeg",
+      "label": "Прежние обои · Тоторо",
+      "group": "legacy",
+      "origin": "wallpaper.jpeg"
+    },
+    {
+      "id": "wallpaper:075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599",
+      "sha256": "075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599",
+      "bytes": 2816684,
+      "width": 1920,
+      "height": 1080,
+      "frames": 34,
+      "file": "assets/wallpapers/library/075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599.gif",
+      "label": "Catppuccin Mocha · зимняя ночь",
+      "group": "legacy",
+      "origin": "wallpaper.gif"
+    },
+    {
+      "id": "wallpaper:a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458",
+      "sha256": "a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458",
+      "bytes": 93193,
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "file": "assets/wallpapers/library/a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458.png",
+      "label": "Gruvbox Dark · самурай",
+      "group": "legacy",
+      "origin": "wallpaper.png"
+    },
+    {
+      "id": "wallpaper:f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b",
+      "sha256": "f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b",
+      "bytes": 698844,
+      "width": 2560,
+      "height": 1440,
+      "frames": 1,
+      "file": "assets/wallpapers/library/f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b.jpg",
+      "label": "Ancient Odyssey",
+      "group": "legacy",
+      "origin": "wallpaper.jpg"
+    },
+    {
+      "id": "wallpaper:6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478",
+      "sha256": "6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478",
+      "bytes": 4835316,
+      "width": 3840,
+      "height": 2160,
+      "frames": 1,
+      "file": "assets/wallpapers/library/6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478.jpeg",
+      "label": "Tokyo Night",
+      "group": "legacy",
+      "origin": "wallpaper.jpeg"
+    },
+    {
+      "id": "wallpaper:bbd4df2538ef9e7e34ea9f415ec4f60c4007a841cb757f7d1f94da42910e0103",
+      "sha256": "bbd4df2538ef9e7e34ea9f415ec4f60c4007a841cb757f7d1f94da42910e0103",
+      "bytes": 5545153,
+      "width": 3840,
+      "height": 3041,
+      "frames": 1,
+      "file": "assets/wallpapers/library/bbd4df2538ef9e7e34ea9f415ec4f60c4007a841cb757f7d1f94da42910e0103.jpg",
+      "label": "Ван Гог · Звёздная ночь",
+      "group": "hyprstack",
+      "origin": "Starry-Night.jpg"
+    },
+    {
+      "id": "wallpaper:1b87f61b667d6a5fe4bc80b3ce761ba51a3ec0451e6705561a3632a5e9e7220c",
+      "sha256": "1b87f61b667d6a5fe4bc80b3ce761ba51a3ec0451e6705561a3632a5e9e7220c",
+      "bytes": 5571692,
+      "width": 5120,
+      "height": 2160,
+      "frames": 1,
+      "file": "assets/wallpapers/library/1b87f61b667d6a5fe4bc80b3ce761ba51a3ec0451e6705561a3632a5e9e7220c.webp",
+      "label": "Обои автора · космос",
+      "group": "hyprstack",
+      "origin": "Author-wallpaper.webp"
+    },
+    {
+      "id": "wallpaper:47d533bf3b8be3e7d8f11c2aae23fb8089fb2002676e9f6bad6a9829df48b34b",
+      "sha256": "47d533bf3b8be3e7d8f11c2aae23fb8089fb2002676e9f6bad6a9829df48b34b",
+      "bytes": 2754447,
+      "width": 1600,
+      "height": 837,
+      "frames": 1,
+      "file": "assets/wallpapers/library/47d533bf3b8be3e7d8f11c2aae23fb8089fb2002676e9f6bad6a9829df48b34b.png",
+      "label": "Хокусай · Большая волна",
+      "group": "hyprstack",
+      "origin": "Great-Wave.png"
+    },
+    {
+      "id": "wallpaper:fa27f5bd28790b35cdd4e4ca044562c4e391bc64dd7c3165dcf8ac056adb75e2",
+      "sha256": "fa27f5bd28790b35cdd4e4ca044562c4e391bc64dd7c3165dcf8ac056adb75e2",
+      "bytes": 3929524,
+      "width": 3000,
+      "height": 2887,
+      "frames": 1,
+      "file": "assets/wallpapers/library/fa27f5bd28790b35cdd4e4ca044562c4e391bc64dd7c3165dcf8ac056adb75e2.jpg",
+      "label": "Моне · Кувшинки",
+      "group": "hyprstack",
+      "origin": "Water-Lilies.jpg"
+    },
+    {
+      "id": "wallpaper:b1ef471333e20a021895d69237f95a627d2fc238351dc195cd4e373e7cfb2d00",
+      "sha256": "b1ef471333e20a021895d69237f95a627d2fc238351dc195cd4e373e7cfb2d00",
+      "bytes": 14862280,
+      "width": 3840,
+      "height": 2160,
+      "frames": 1,
+      "file": "assets/wallpapers/library/b1ef471333e20a021895d69237f95a627d2fc238351dc195cd4e373e7cfb2d00.png",
+      "label": "Гентский алтарь",
+      "group": "hyprstack",
+      "origin": "Ghent-Altarpiece.png"
+    }
+  ]
+}

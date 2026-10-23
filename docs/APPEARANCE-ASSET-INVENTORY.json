@@ -1,0 +1,605 @@
+{
+  "kind": "design-input-inventory",
+  "version": 1,
+  "recorded_date": "2026-10-22",
+  "legacy_themes": [
+    {
+      "id": "legacy:ancient-odyssey",
+      "source": "/home/andrew/dotfiles/niri-staging/assets/themes/ancient-odyssey",
+      "files": {
+        "alacritty.toml": "39c72ee42d101777f6dd48e39ec9c8971707c4719aef825724d118080632e030",
+        "eww.scss": "8491e7523e9e1bdd90e15dcfde81275ebda52858762fb239b0a8b76d2775f0e3",
+        "fuzzel.ini": "15ef7c3d3a47ebbbcd4ad6ee342529da5fe4f93a84766bd00812e157b1a82ca3",
+        "gtk-theme.txt": "fa68ac4eebbefe581a8a47ee512d30c5902c65c36dccfa8689bba88bb7ec1cb7",
+        "gtklock.css": "b66de760c0e2a40da9f27e90fe6d4e27bb75e359a488ae2f2e578567b73c465b",
+        "mako.conf": "58b691095c62db3d769d7287b88afda634bb05aeaee1a93db8df30b654eec993",
+        "niri-runtime.kdl": "62abfe157278492b4889c51bc72f81f10c25627e96f9774cf128ee810a9492b9",
+        "niri.kdl": "62abfe157278492b4889c51bc72f81f10c25627e96f9774cf128ee810a9492b9",
+        "terminal-opacity.toml": "691faea051f8c8a9bcadab47ea85552e43efd611307da19538be6205a456ca32",
+        "wallpaper.jpg": "f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b",
+        "waybar.css": "e48c9db5e19478c2ad7c567c9859cec45f868d842893b9cb2a8bfb4872576e4a"
+      }
+    },
+    {
+      "id": "legacy:catppuccin-mocha",
+      "source": "/home/andrew/dotfiles/niri-staging/assets/themes/catppuccin-mocha",
+      "files": {
+        "alacritty.toml": "12a06990448128137181edfb244b5f0fa776235e6376b83b762139f44e46b718",
+        "eww.scss": "ec54b8e90a476c5eec1f5720d13efd94eeeac92f94bc17ad0419b9bf60ecf684",
+        "fuzzel.ini": "14949071de14e8ccf2d49c1ef4f425ac3bd934f99937f5021ce7bd920aef68fb",
+        "gtk-theme.txt": "c7a7cbaead252f40020800bc405bf781a44ac2fb533a8e99eb7ad4d78bf47396",
+        "gtklock.css": "692d5e8b5f58e5c832b38088c39ea4f62edb2da88779175c26c2dfd36348c472",
+        "mako.conf": "20f3245abee495d70047f925c5d23d46529bf50dd44589705a65677c19d78a1a",
+        "niri-runtime.kdl": "c62c768b93b6362d93d3a3c2e1b6665721a2417c520f38b153a3d71837d625e6",
+        "niri.kdl": "578560b8a240ed0cc75f948496364a7926bb73daf2463851162a262a4fd0d818",
+        "style.css": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "terminal-opacity.toml": "67727df7fd242d40510a77946bfd94e2ce44cc0bf025e2c9af100d264a4004fa",
+        "wallpaper.gif": "075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599",
+        "waybar.css": "4f6f7f2d96983e3e8169881ee228cf881a6e4267f120495e8d1f2def2284cf99"
+      }
+    },
+    {
+      "id": "legacy:gruvbox-dark",
+      "source": "/home/andrew/dotfiles/niri-staging/assets/themes/gruvbox-dark",
+      "files": {
+        "alacritty.toml": "7d25c15de6d8f09457bd47230a0c9f673050fb847e5db7548b64c292b5246c7f",
+        "eww.scss": "4f70dceb0fa03b276633de5bc4abacf14c50f3e9e2405b8642bc70eb6a9201e1",
+        "fuzzel.ini": "9494d1c20aefad4a2ec9de645c900cda514f229a34206eca84ca028cc55350f3",
+        "gtk-theme.txt": "879582b4247117b454cbc47ebbb1224f98c3cc0b920e28819787df0dc0979349",
+        "gtklock.css": "74181a0175add9d8ac7b21f73730228e18881c5c8093fc4b65ed5e46dc8ca0a4",
+        "mako.conf": "20f3245abee495d70047f925c5d23d46529bf50dd44589705a65677c19d78a1a",
+        "niri-runtime.kdl": "e72f4fa388cf0f3d91bd3401ad2d2b67b3c9536bbced9860d48e6ddc74877caf",
+        "niri.kdl": "0037a8400df514abb786527beb41a76114875dbc25acb70b7b1122297fbc9f3c",
+        "style.css": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "terminal-opacity.toml": "67727df7fd242d40510a77946bfd94e2ce44cc0bf025e2c9af100d264a4004fa",
+        "wallpaper.png": "a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458",
+        "waybar.css": "4771a289ec7b504fbee762cc36842652163de9fc68d618730360a198c77a08af"
+      }
+    },
+    {
+      "id": "legacy:tokyo-night",
+      "source": "/home/andrew/dotfiles/niri-staging/assets/themes/tokyo-night",
+      "files": {
+        "alacritty.toml": "cf9c67a69d3e1f033a73075a53c6b3be6a0275c9459e0e3d5b156b7cacfda69f",
+        "eww.scss": "7fa82d1b41bb4fde17e295d80912e878cd6558ecf9ba5ef0ff9ab611ca452071",
+        "fuzzel.ini": "967797730dfd3f58c313da75d2a5da1c2a865f4886e848a2af40b01e10b4b543",
+        "gtk-theme.txt": "f9044214e9fc90b36432c8c30b7c82d512e398c0e6610f9dd65709491939c813",
+        "gtklock.css": "64967072bf39745ef05514803815f6afd0289af5388486972c9cd86f0fd51b66",
+        "mako.conf": "20f3245abee495d70047f925c5d23d46529bf50dd44589705a65677c19d78a1a",
+        "niri-runtime.kdl": "f2e07e34821f21402317cda3cf8b283c8a98f31edca256d9fd4deee92c8c22f5",
+        "niri.kdl": "897090a329b1eff45759c3f3f116f108d8be3321a033a73727e6be6c1e5f81be",
+        "style.css": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "terminal-opacity.toml": "67727df7fd242d40510a77946bfd94e2ce44cc0bf025e2c9af100d264a4004fa",
+        "wallpaper.jpeg": "6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478",
+        "waybar.css": "f9cb71a10e2e3ebe01158cb8e1f82bb96990d9d98725434e3e3a38400d5b1d90"
+      }
+    }
+  ],
+  "hyprstack": {
+    "repository": "https://github.com/hase9awa/hyprstack-shell",
+    "commit": "5bdf73cbdc84c3cb27b5f6901d09e4c969c441c6",
+    "path": "shell/assets/schemes/presets.json",
+    "sha256": "08fe532cc74e75f18423e4a1b514a7e1218a7310235b39ab6fdca6c3ae96f9f9",
+    "palettes": [
+      {
+        "id": "hyprstack:catppuccin",
+        "name": "Catppuccin",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "rosewater",
+          "flamingo",
+          "pink",
+          "red",
+          "maroon",
+          "peach",
+          "yellow",
+          "green",
+          "teal",
+          "sky",
+          "sapphire",
+          "blue",
+          "lavender",
+          "mauve"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:gruvbox",
+        "name": "Gruvbox",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "red",
+          "green",
+          "blue",
+          "purple",
+          "aqua",
+          "orange",
+          "yellow"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:kanagawa",
+        "name": "Kanagawa",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "green",
+          "cyan",
+          "violet",
+          "pink",
+          "yellow",
+          "blue",
+          "orange",
+          "red",
+          "light_blue",
+          "violet_2",
+          "aqua",
+          "spring_blue",
+          "spring_violet",
+          "samurai_red",
+          "ronin_yellow"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:everforest",
+        "name": "Everforest",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "red",
+          "yellow",
+          "purple",
+          "aqua",
+          "orange",
+          "green"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:rosepine",
+        "name": "Rosé Pine",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "rose",
+          "gold",
+          "love",
+          "foam",
+          "pine",
+          "iris",
+          "leaf"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:tokyonight",
+        "name": "Tokyo Night",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "purple",
+          "cyan",
+          "green",
+          "pink",
+          "orange",
+          "blue",
+          "blue0",
+          "blue1",
+          "blue2",
+          "blue5",
+          "blue6",
+          "blue7",
+          "green1",
+          "green2",
+          "magenta",
+          "magenta2",
+          "red",
+          "red1",
+          "teal",
+          "yellow"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:dracula",
+        "name": "Dracula",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "pink",
+          "cyan",
+          "green",
+          "orange",
+          "red",
+          "purple",
+          "yellow"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:nord",
+        "name": "Nord",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "yellow",
+          "red",
+          "cyan",
+          "orange",
+          "frost",
+          "deep_blue"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:solarized",
+        "name": "Solarized",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "cyan",
+          "green",
+          "yellow",
+          "orange",
+          "magenta",
+          "violet",
+          "red",
+          "blue"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:one",
+        "name": "One",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "purple",
+          "green",
+          "yellow",
+          "red",
+          "cyan",
+          "blue",
+          "orange",
+          "deep_red",
+          "syntax_accent"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:github",
+        "name": "GitHub",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "yellow",
+          "orange",
+          "red",
+          "coral",
+          "cyan"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:ayu",
+        "name": "Ayu",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "red",
+          "orange",
+          "yellow",
+          "peach",
+          "indigo"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:nightfox",
+        "name": "Nightfox",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "red",
+          "yellow",
+          "magenta",
+          "cyan",
+          "orange"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:monokai",
+        "name": "Monokai",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "red",
+          "orange",
+          "yellow",
+          "cyan"
+        ],
+        "adapted_modes": [
+          "light"
+        ]
+      },
+      {
+        "id": "hyprstack:horizon",
+        "name": "Horizon",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "red",
+          "orange",
+          "yellow",
+          "cyan",
+          "tacao"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:oxocarbon",
+        "name": "Oxocarbon",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "cyan",
+          "red",
+          "orange",
+          "sky"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:papercolor",
+        "name": "PaperColor",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "red",
+          "orange",
+          "yellow",
+          "olive",
+          "steel"
+        ],
+        "adapted_modes": []
+      },
+      {
+        "id": "hyprstack:vesper",
+        "name": "Vesper",
+        "modes": [
+          "dark",
+          "light"
+        ],
+        "accent_ids": [
+          "blue",
+          "purple",
+          "green",
+          "pink",
+          "teal",
+          "orange",
+          "red",
+          "mint",
+          "amber",
+          "white",
+          "grey"
+        ],
+        "adapted_modes": [
+          "light"
+        ]
+      }
+    ]
+  },
+  "wallpapers": [
+    {
+      "id": "wallpaper:7f8fa358c343170444853e38fec81d4fe923e5028cc3ddbb1319d894b34969d8",
+      "sha256": "7f8fa358c343170444853e38fec81d4fe923e5028cc3ddbb1319d894b34969d8",
+      "bytes": 265473,
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/wallpapers/wallpaper.jpg",
+        "/home/andrew/dotfiles/assets/wallpapers/wallpaper.jpg",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/wallpapers/wallpaper.jpg"
+      ]
+    },
+    {
+      "id": "wallpaper:70b9871e971d10aec395b7498f89b6b196c2d376f04781123e9c5c9d52db963a",
+      "sha256": "70b9871e971d10aec395b7498f89b6b196c2d376f04781123e9c5c9d52db963a",
+      "bytes": 368114,
+      "width": 2064,
+      "height": 1296,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/swaybg/wallpaper.jpeg",
+        "/home/andrew/dotfiles/assets/swaybg/wallpaper.jpeg",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/swaybg/wallpaper.jpeg"
+      ]
+    },
+    {
+      "id": "wallpaper:075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599",
+      "sha256": "075aec5bb7049a1896bfb3954d8137f24d18e5aee8fdf1d7c3d22c7d75bf9599",
+      "bytes": 2816684,
+      "width": 1920,
+      "height": 1080,
+      "frames": 34,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/themes/catppuccin-mocha/wallpaper.gif",
+        "/home/andrew/dotfiles/assets/themes/catppuccin-mocha/wallpaper.gif",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/themes/catppuccin-mocha/wallpaper.gif"
+      ]
+    },
+    {
+      "id": "wallpaper:a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458",
+      "sha256": "a173465641ce4dad690461e85345f32f1ef4c0a0e98c726a3420c276464e0458",
+      "bytes": 93193,
+      "width": 1920,
+      "height": 1080,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/themes/gruvbox-dark/wallpaper.png",
+        "/home/andrew/dotfiles/assets/themes/gruvbox-dark/wallpaper.png",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/themes/gruvbox-dark/wallpaper.png"
+      ]
+    },
+    {
+      "id": "wallpaper:f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b",
+      "sha256": "f8b9da7c1e01627abbd20d9311feaf84f8205501e04184e5ba265f4d63fd812b",
+      "bytes": 698844,
+      "width": 2560,
+      "height": 1440,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/themes/ancient-odyssey/wallpaper.jpg",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/themes/ancient-odyssey/wallpaper.jpg"
+      ]
+    },
+    {
+      "id": "wallpaper:6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478",
+      "sha256": "6d78c47b8c7d1896ba635ec5a4bdcb49ad7ec1e0f719000a3c31e2a9931fb478",
+      "bytes": 4835316,
+      "width": 3840,
+      "height": 2160,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/dotfiles/niri-staging/assets/themes/tokyo-night/wallpaper.jpeg",
+        "/home/andrew/dotfiles/assets/themes/tokyo-night/wallpaper.jpeg",
+        "/home/andrew/.local/state/dotfiles/releases/20260918-120609-677912/assets/themes/tokyo-night/wallpaper.jpeg"
+      ]
+    },
+    {
+      "id": "wallpaper:bbd4df2538ef9e7e34ea9f415ec4f60c4007a841cb757f7d1f94da42910e0103",
+      "sha256": "bbd4df2538ef9e7e34ea9f415ec4f60c4007a841cb757f7d1f94da42910e0103",
+      "bytes": 5545153,
+      "width": 3840,
+      "height": 3041,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/Документы/ChatGPT/LINUX/setup/wallpapers/Starry-Night.jpg",
+        "/home/andrew/Изображения/Wallpapers/Hyprstack/Starry-Night.jpg"
+      ]
+    },
+    {
+      "id": "wallpaper:1b87f61b667d6a5fe4bc80b3ce761ba51a3ec0451e6705561a3632a5e9e7220c",
+      "sha256": "1b87f61b667d6a5fe4bc80b3ce761ba51a3ec0451e6705561a3632a5e9e7220c",
+      "bytes": 5571692,
+      "width": 5120,
+      "height": 2160,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/Документы/ChatGPT/LINUX/setup/wallpapers/Author-wallpaper.webp"
+      ]
+    },
+    {
+      "id": "wallpaper:47d533bf3b8be3e7d8f11c2aae23fb8089fb2002676e9f6bad6a9829df48b34b",
+      "sha256": "47d533bf3b8be3e7d8f11c2aae23fb8089fb2002676e9f6bad6a9829df48b34b",
+      "bytes": 2754447,
+      "width": 1600,
+      "height": 837,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/Документы/ChatGPT/LINUX/setup/wallpapers/Great-Wave.png"
+      ]
+    },
+    {
+      "id": "wallpaper:fa27f5bd28790b35cdd4e4ca044562c4e391bc64dd7c3165dcf8ac056adb75e2",
+      "sha256": "fa27f5bd28790b35cdd4e4ca044562c4e391bc64dd7c3165dcf8ac056adb75e2",
+      "bytes": 3929524,
+      "width": 3000,
+      "height": 2887,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/Документы/ChatGPT/LINUX/setup/wallpapers/Water-Lilies.jpg"
+      ]
+    },
+    {
+      "id": "wallpaper:b1ef471333e20a021895d69237f95a627d2fc238351dc195cd4e373e7cfb2d00",
+      "sha256": "b1ef471333e20a021895d69237f95a627d2fc238351dc195cd4e373e7cfb2d00",
+      "bytes": 14862280,
+      "width": 3840,
+      "height": 2160,
+      "frames": 1,
+      "sources": [
+        "/home/andrew/Изображения/Wallpapers/Hyprstack/Ghent-Altarpiece.png"
+      ]
+    }
+  ]
+}

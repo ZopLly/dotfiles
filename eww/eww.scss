@@ -1,4 +1,4 @@
-@import "../../.config/waybar/theme_colors.css";
+@import "theme_colors.scss";
 
 // Мост между GTK CSS (@) и SCSS ($)
 $bg: #{'@bg'};
@@ -173,9 +173,9 @@ scale.app-slider {
   }
 }
 
-.media-controls {
+.media-controls-minimal {
   margin-top: 4px;
-  .media-btn {
+  .media-btn-min {
     background-color: $overlay;
     color: $fg;
     border: 1px solid $border;
@@ -190,7 +190,7 @@ scale.app-slider {
       border-color: $accent;
     }
 
-    &.play {
+    &.play-min {
       background-color: $accent;
       color: $bg;
       min-width: 42px;

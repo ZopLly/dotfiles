@@ -2,10 +2,15 @@
 
 set -euo pipefail
 
-SESSION_FILE="$HOME/.local/state/niri-session/session.json"
+SESSION_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/niri-session/session.json"
 
 if [[ ! -f "$SESSION_FILE" ]]; then
     exit 0
+fi
+
+if ! jq -e '.version == 2 and (.windows | type == "array")' "$SESSION_FILE" >/dev/null; then
+    echo 'Old or invalid session format. Save the session again before restoring.' >&2
+    exit 1
 fi
 
 if ! command -v fuzzel >/dev/null 2>&1; then
@@ -13,7 +18,7 @@ if ! command -v fuzzel >/dev/null 2>&1; then
 fi
 
 CHOICE=$(printf 'Restore previous session\nStart fresh\n' |
-    fuzzel --dmenu --prompt="Session: ")
+    fuzzel --dmenu --prompt="Session: ") || exit 0
 
 case "$CHOICE" in
     "Restore previous session")
@@ -72,15 +77,15 @@ spawn_app() {
 
 mapfile -t ENTRIES < <(
     jq -r '
-        .[]
-        | [.app_id, .workspace, .column]
+        .windows | sort_by(.output, .workspace, .column) | .[]
+        | [.app_id, .workspace, (.column // 0), (.output // "")]
         | @tsv
     ' "$SESSION_FILE"
 )
 
 
 for entry in "${ENTRIES[@]}"; do
-    IFS=$'\t' read -r APP WORKSPACE COLUMN <<< "$entry"
+    IFS=$'\t' read -r APP WORKSPACE COLUMN OUTPUT <<< "$entry"
 
     OLD_IDS=$(
         niri msg -j windows |
@@ -99,9 +104,14 @@ for entry in "${ENTRIES[@]}"; do
 
     niri msg action focus-window --id "$WINDOW_ID"
 
-    niri msg action move-column-to-workspace \
-        "$WORKSPACE"
+    if [[ -n "$OUTPUT" ]]; then
+        niri msg action move-window-to-monitor "$OUTPUT" || echo "Output unavailable: $OUTPUT" >&2
+    fi
+    niri msg action move-window-to-workspace "$WORKSPACE"
 
-    niri msg action move-column-to-index \
-        "$COLUMN"
+    if (( COLUMN > 0 )); then
+        niri msg action move-column-to-index "$COLUMN"
+    else
+        niri msg action move-window-to-floating
+    fi
 done

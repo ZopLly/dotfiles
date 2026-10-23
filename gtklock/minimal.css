@@ -1,0 +1,36 @@
+/* Minimal: shared structure, theme tokens below. */
+window { color: @lock_fg; background-color: @lock_bg; }
+#window-box { margin: 24px; }
+#clock-label { color: @lock_fg; font-family: "Inter Display", "Inter", sans-serif; font-size: 88px; font-weight: 400; margin-bottom: 0; }
+#date-label { color: @lock_dim; font-family: "Inter", sans-serif; font-size: 18px; margin-bottom: 26px; }
+#input-field { min-width: 260px; min-height: 44px; padding: 2px 18px; color: @lock_fg; background-color: alpha(@lock_surface, 0.88); border: 1px solid alpha(@lock_border, 0.55); border-radius: 14px; box-shadow: none; font-size: 16px; }
+#input-field:focus { border-color: @lock_border; background-color: alpha(@lock_surface, 0.96); }
+#input-field:disabled { color: @lock_accent; }
+#input-label { font-size: 0; min-width: 0; min-height: 0; }
+#input-field image { color: @lock_dim; }
+#error-label { color: @lock_error; font-size: 13px; }
+#warning-label { color: @lock_dim; font-size: 12px; }
+#unlock-button { background: transparent; color: @lock_dim; border: none; box-shadow: none; font-size: 12px; padding: 4px 8px; }
+#minimal-media { color: @lock_dim; font-size: 13px; margin-top: 16px; }
+#minimal-battery { color: @lock_dim; font-size: 12px; }
+/* A static overlay: no live shader or compositor blur. */
+window > overlay { background-color: @lock_overlay; }
+
+#lock-notifications { color: @lock_fg; background-color: alpha(@lock_surface, 0.92); border-radius: 16px; padding: 16px; font-size: 13px; }
+
+/* Split composition selected by the user. */
+#window-box { margin: 48px; }
+#clock-label { font-size: 104px; font-weight: 300; }
+#date-label { margin-bottom: 8px; font-size: 20px; }
+#lock-greeting { color: @lock_dim; font-size: 14px; margin-top: 8px; }
+#auth-card { padding: 28px; border-radius: 30px; background-color: alpha(@lock_surface, 0.94); border: 1px solid alpha(@lock_border, 0.26); }
+#lock-avatar { color: @lock_accent; background-color: alpha(@lock_accent, 0.15); border-radius: 24px; font-size: 32px; }
+#lock-user { font-size: 23px; font-weight: 600; }
+#lock-welcome { color: @lock_dim; font-size: 13px; margin-bottom: 6px; }
+#minimal-media { background-color: alpha(@lock_surface, 0.9); border-radius: 18px; padding: 20px; margin-top: 0; }
+#minimal-battery { background-color: alpha(@lock_surface, 0.9); border-radius: 16px; padding: 10px 16px; }
+#window-box.compact { margin: 24px; }
+#window-box.compact #clock-label { font-size: 68px; }
+#window-box.compact #date-label { font-size: 16px; }
+#window-box.compact #lock-greeting { font-size: 12px; }
+#window-box.compact #auth-card { padding: 20px; }

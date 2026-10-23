@@ -1,22 +1,64 @@
-# My Niri Dotfiles
+# Niri desktop
 
-My personal Wayland desktop configuration.
+Личное окружение Niri: Quickshell с островками, дашбордом, уведомлениями,
+настройками оформления, виджетами и отдельным режимом свободных окон для каждого
+рабочего стола. Палитра и обои выбираются независимо; прежние темы сохранены.
 
-## Stack
+## Установка из приватного репозитория
 
-- Window manager: Niri
-- OS: EndeavourOS
-- Terminal: Kitty
-- Bar: Waybar
-- Launcher: Fuzzel
-- Notifications: Mako
+Для Arch Linux, EndeavourOS и CachyOS. Сначала один раз установи GitHub CLI
+(`sudo pacman -S github-cli`) и войди в свой аккаунт: `gh auth login`.
+Аккаунту нужен доступ к приватному репозиторию ZopLly/dotfiles.
+Затем установка одной командой:
 
-## Installation
+```sh
+bash -o pipefail -c 'gh api repos/ZopLly/dotfiles/contents/bootstrap.sh --jq .content | base64 -d | bash'
+```
 
-```bash
-git clone https://github.com/...
-cd dotfiles
-./install.sh
+Установщик загружает исходники через HTTPS с авторизацией GitHub CLI, ставит
+официальные пакеты Arch с подтверждением администратора, проверяет Niri и создаёт
+отдельный установленный снимок. SSH-ключи не используются. Текущие конфиги
+сохраняются в `~/.local/state/dotfiles/backups/`; установщик выводит путь к
+`manifest.json`. Затем выйди из сессии и выбери Niri на экране входа.
 
+Для отката используй установленный снимок и выведенный путь к манифесту:
 
-sudo pacman -S network-manager-applet fuzzel waybar ..
+```sh
+python3 /путь/к/снимку/scripts/install.py --rollback /путь/к/manifest.json --apply
+```
+
+Приложения Happ и ChatGPT устанавливаются отдельно. Внешние мониторы на новом
+компьютере определяются автоматически; существующий файл настроек экранов Niri
+сохраняется. Установку в Ubuntu/Kubuntu этот установщик не поддерживает.
+
+## Управление
+
+- Super+T — терминал; Super+B — браузер; Super+C — установленное ChatGPT;
+  Super+Alt+V — установленное Happ.
+- Super+вверх/вниз — рабочий стол; Super+Ctrl+вверх/вниз — перенести окно.
+- Часы в центре панели — дашборд: обзор, медиа, производительность и погода.
+- Правая шторка → «Свободные окна на этом столе» — включить или выключить режим.
+- Правая шторка → виджеты → «Нагрузка» — добавить CPU/RAM на текущий рабочий стол.
+  «Расположение виджетов» позволяет двигать и менять размер карточек.
+- Во время воспроизведения в медиа отображается спектр звука через CAVA.
+  Это общий звук выбранного системного выхода, а не отдельный аудиопоток плеера.
+
+## Благодарности
+
+Автор [hase9awa](https://github.com/hase9awa): темы и палитры перенесены из
+[Hyprstack Shell](https://github.com/hase9awa/hyprstack-shell), а идея
+переключения между тайлингом и свободными окнами заимствована у
+[Hyprstack Shell](https://github.com/hase9awa/hyprstack-shell).
+Исходный набор настроек автора — [Hyprstack dotfiles](https://github.com/hase9awa/hyprstack-dotfiles).
+Реализация окружения для Niri развивается отдельно. Источники импортированных
+палитр, обоев и лицензия находятся в `assets/appearance/hyprstack/`.
+
+## Подготовка изменений
+
+Рабочая копия `niri-staging` отделена от установленного снимка. Правки исходников
+не меняют текущую сессию; применение выполняется отдельным действием после проверки.
+
+- [Возможности оболочки](docs/QUICKSHELL.md)
+- [Изолированный предпросмотр](docs/PREVIEW.md)
+- [Режимы окон](docs/WINDOW-MODES.md)
+- [Правила работы](AGENTS.md)

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Native gtklock module is built locally, never versioned.
+gtklock/modules/*.so

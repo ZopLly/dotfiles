@@ -1,123 +1,49 @@
 #!/usr/bin/env bash
-
-# ==============================================================================
-# Monolithic Theme Switcher for Niri, Waybar, Eww, Alacritty, Mako, Cava, GTK & Awww
-# ==============================================================================
-
-DOTFILES="$HOME/dotfiles"
-THEMES_DIR="$DOTFILES/assets/themes"
-CURRENT_LINK="$THEMES_DIR/current"
-
-# ------------------------------------------------------------------------------
-# 1. Меню выбора темы (Fuzzel)
-# ------------------------------------------------------------------------------
-SELECTED_THEME=$(find "$THEMES_DIR" -maxdepth 1 -mindepth 1 -type d ! -name "current" -exec basename {} \; | sort | fuzzel --dmenu -p "🎨 Выберите тему: ")
-
-# Выход, если пользователь закрыл меню
-if [ -z "$SELECTED_THEME" ]; then
-    exit 0
-fi
-
-TARGET_DIR="$THEMES_DIR/$SELECTED_THEME"
-
-if [ ! -d "$TARGET_DIR" ]; then
-    notify-send "Theme Switcher" "Ошибка: папка $SELECTED_THEME не найдена"
+set -euo pipefail
+root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+themes="$root/assets/themes"
+# The checkout is editable staging, not a deployed desktop.
+if [[ -d "$root/.git" ]]; then
+    echo 'Theme switching is available only in an installed snapshot.' >&2
     exit 1
 fi
-
-# ------------------------------------------------------------------------------
-# 2. Мгновенное переключение единого симлинка 'current'
-# ------------------------------------------------------------------------------
-ln -sfn "$TARGET_DIR" "$CURRENT_LINK"
-
-# ------------------------------------------------------------------------------
-# 3. Обои (Awww)
-# ------------------------------------------------------------------------------
-WALLPAPER=$(find "$TARGET_DIR" -maxdepth 1 -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" -o -name "*.webp" \) | head -n 1)
-
-if [ -n "$WALLPAPER" ]; then
-    if command -v awww &>/dev/null; then
-        awww img "$WALLPAPER" 2>/dev/null
-    fi
+selected=${1:-}
+if [[ -z "$selected" ]]; then
+    selected=$(find "$themes" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | fuzzel --dmenu -p '🎨 Выберите тему: ') || exit 0
 fi
-
-# ------------------------------------------------------------------------------
-# 4. GTK & Libadwaita (Цветовая схема и темы)
-# ------------------------------------------------------------------------------
-# Проверяем, есть ли кастомное название GTK темы в папке с темой
-if [ -f "$TARGET_DIR/gtk-theme.txt" ]; then
-    GTK_THEME=$(cat "$TARGET_DIR/gtk-theme.txt" | xargs)
-    gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME" 2>/dev/null || true
+[[ -n "$selected" ]] || exit 0
+case "$selected" in catppuccin-mocha|gruvbox-dark|tokyo-night|ancient-odyssey) ;; *) echo 'Unknown theme' >&2; exit 2 ;; esac
+old=$(readlink "$themes/current")
+# Validate a candidate include without changing the active theme first.
+candidate=$(mktemp "$root/niri/.theme-check.XXXXXX.kdl")
+link="$themes/.current-$$"
+trap 'rm -f "$candidate" "$link"' EXIT
+python3 "$root/scripts/niri_config.py" --theme "$selected" "$root/niri/config.kdl" > "$candidate"
+niri validate -c "$candidate"
+ln -s "$selected" "$link"
+mv -Tf "$link" "$themes/current"
+if ! niri validate -c "$root/niri/config.kdl"; then
+    ln -s "$old" "$link"
+    mv -Tf "$link" "$themes/current"
+    exit 1
 fi
-
-# Устанавливаем светлый/темный режим для GTK/Qt/VSCode/Браузеров
-if [[ "$SELECTED_THEME" == *"light"* ]]; then
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' 2>/dev/null || true
-else
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+failed=0
+refresh() { "$@" || { printf 'Failed: %s\n' "$*" >&2; failed=1; }; }
+refresh "$root/scripts/wallpaper.sh"
+if [[ -f "$themes/$selected/gtk-theme.txt" ]]; then
+    gtk_theme=$(<"$themes/$selected/gtk-theme.txt")
+    refresh gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
 fi
-
-# ------------------------------------------------------------------------------
-# 5. Перезагрузка и горячее обновление демонов
-# ------------------------------------------------------------------------------
-
-# Mako (Уведомления)
-# 1. Перенаправляем симлинк конфига на mako.conf из новой темы (если он там есть)
-if [ -f "$TARGET_DIR/mako.conf" ]; then
-    ln -sfn "$TARGET_DIR/mako.conf" "$HOME/.config/mako/config"
+refresh gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+if pgrep -x waybar >/dev/null; then refresh pkill -SIGUSR2 -x waybar; fi
+if pgrep -x eww >/dev/null; then refresh eww --config "$root/eww" reload; fi
+if pgrep -x mako >/dev/null; then refresh makoctl reload; fi
+refresh "$root/gtklock/scripts/blur-background.sh"
+# Fuzzel reads the selected theme on its next launch.
+# Niri watches includes. Alacritty is explicitly nudged after changing the symlink.
+touch "$root/alacritty/alacritty.toml"
+if (( failed )); then
+    notify-send 'Тема изменена частично' 'См. ошибки переключателя в журнале.' || true
+    exit 1
 fi
-
-# 2. Твой исходный код: мягко перезагружаем Mako, если демон запущен
-if pgrep -x "mako" > /dev/null; then
-    makoctl reload 2>/dev/null || true
-fi
-# Cava (Аудио визуализатор)
-if pgrep -x "cava" > /dev/null; then
-    pkill -USR1 cava 2>/dev/null || true
-fi
-
-# Waybar (Статус-бар)
-if pgrep -x "waybar" > /dev/null; then
-    pkill -SIGUSR2 waybar 2>/dev/null || true
-fi
-
-# Eww (Виджеты)
-if command -v eww &>/dev/null; then
-    eww reload 2>/dev/null || true
-fi
-
-# Niri (Оконный менеджер)
-if command -v niri &>/dev/null && pgrep -x "niri" > /dev/null; then
-    niri msg action reload-config 2>/dev/null || true
-fi
-
-# ------------------------------------------------------------------------------
-# 6. Системное уведомление
-# ------------------------------------------------------------------------------
-if command -v notify-send &>/dev/null; then
-    notify-send -u low -i preferences-desktop-theme "Theme Switcher" "Тема успешно изменена на <b>$SELECTED_THEME</b>"
-fi
-# ------------------------------------------------------------------------------
-# 7. Niri (Автоматическая замена цвета рамки фокуса в config.kdl)
-# ------------------------------------------------------------------------------
-NIRI_CONF="$HOME/.config/niri/config.kdl"
-
-if [ -f "$NIRI_CONF" ]; then
-    case "$SELECTED_THEME" in
-        "gruvbox-dark")      ACCENT="#fe8019" ;;
-        "catppuccin-mocha")  ACCENT="#89b4fa" ;;
-        "tokyo-night")       ACCENT="#7aa2f7" ;;
-        *)                   ACCENT="#89b4fa" ;;
-    esac
-
-    # Меняем значение active-color в файле config.kdl
-    sed -i -E "s/(active-color|active-gradient)[[:space:]]+\"[^\"]+\"/\1 \"$ACCENT\"/g" "$NIRI_CONF"
-fi
-# ------------------------------------------------------------------------------
-# 8. Alacritty Theme Switch
-# ------------------------------------------------------------------------------
-# Привязываем theme.toml к теме
-ln -sfn "$HOME/dotfiles/assets/themes/$SELECTED_THEME/alacritty.toml" "$HOME/.config/alacritty/theme.toml"
-
-# Принудительно обновляем дату файла, чтобы inotify разбудил открытые терминалы
-touch "$HOME/.config/alacritty/alacritty.toml"
+notify-send 'Тема изменена' "$selected" || true

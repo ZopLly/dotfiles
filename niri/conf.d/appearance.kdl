@@ -1,0 +1,10 @@
+// appearance — managed module
+
+prefer-no-csd
+hotkey-overlay {
+    // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
+    // skip-at-startup
+}
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+include "../../assets/themes/current/niri-runtime.kdl"
