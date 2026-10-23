@@ -155,6 +155,10 @@ ShellRoot {
     }
     Variants {
         model: Quickshell.screens
+        delegate: FloatingResize { required property var modelData; screen: modelData; outputName: modelData.name; shell: root }
+    }
+    Variants {
+        model: Quickshell.screens
         delegate: Desktop { required property var modelData; screen: modelData; shell: root }
     }
 }

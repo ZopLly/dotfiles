@@ -36,6 +36,12 @@ def run(base):
     initial=windows();assert len(initial)>=3,'Open the applications preview first'
     first=initial[0]['id'];action('focus-window','--id',first)
     before=snap();toggle();wait(lambda:all(w['is_floating'] for w in windows()))
+    # The same helper used by mouse grips must resize a real floating client.
+    from floating_resize import resize
+    window=next(w for w in windows() if w['id']==first)
+    with patch.dict(os.environ,env):
+        resize(dict(id=first,pid=window['pid'],output='winit',width=360,height=400,right=None,bottom=None,final=True))
+    wait(lambda:all(abs(actual-wanted)<=2 for actual,wanted in zip(next(w for w in windows() if w['id']==first)['layout']['window_size'],[360,400])))
     action('set-window-width','--id',first,'300')
     command(['qs','ipc','-p',str(base/'config/quickshell'),'call','shell','page','main'])
     time.sleep(.3)
@@ -56,7 +62,7 @@ def run(base):
     second=ordered[1]['id'];action('focus-window','--id',second);action('consume-or-expel-window-left','--id',second);time.sleep(.3)
     before=snap();toggle();wait(lambda:all(w['is_floating'] for w in windows()));toggle();after=check(before)
     # Isolate one test window on a different workspace; toggling must leave it tiled.
-    other=ordered[-1]['id'];action('move-window-to-workspace','--window-id',other,'--focus','false','2')
+    other=next(w['id'] for w in reversed(ordered) if w['id']!=first);action('move-window-to-workspace','--window-id',other,'--focus','false','2')
     action('focus-window','--id',first);time.sleep(.2)
     before=snap();toggle();wait(lambda:any(w['is_floating'] for w in windows()))
     assert not next(w for w in windows() if w['id']==other)['is_floating']
