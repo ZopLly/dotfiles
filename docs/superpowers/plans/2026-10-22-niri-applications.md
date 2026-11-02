@@ -13,14 +13,14 @@ Only niri-staging. Preserve original colors/assets and unrelated dirty files. No
 Window/desktop identity, ambiguous matching and stale windows; popup keyboard focus and narrow widths; native actions only on private socket; unsafe launch blocked; process exit and event-stream reconnect; unchanged dirty baseline and appearance preview regressions.
 
 ### Task 1: Model and guarded service
-**Files:** quickshell/applications/*.py, tests/check_applications.py.
+**Files:** quickshell/applications/*.py, dev/tests/check_applications.py.
 **Interfaces:** desktop_entries(); groups(entries, windows, workspaces, current_only, output); ApplicationService.snapshot/action. Preview boundary shared with appearance.
 - [x] Write/run failing behavior tests for matching, grouping, workspace filter, stale IDs, unsupported actions and preview guard.
 - [x] Implement service/event bridge, Gio catalogue and safe preview terminal/settings launch; rerun tests and commit.
 Expected: tests pass, no writes or native commands outside disposable preview.
 
 ### Task 2: Island, launcher and real GUI verification
-**Files:** quickshell/Applications*.qml, AppIcon.qml, ApplicationsLayout.js; small Bar/shell integration; scripts/applications-preview.py; tests/qml/tst_applications.qml; docs/APPLICATIONS.md.
+**Files:** quickshell/Applications*.qml, AppIcon.qml, ApplicationsLayout.js; small Bar/shell integration; scripts/applications-preview.py; dev/tests/qml/tst_applications.qml; docs/APPLICATIONS.md.
 **Interfaces:** controller with entries/groups/action; shared root openPanel/openScreen; IPC applications status/menu/act; settings appearance IPC.
 - [x] Write/run failing QML keyboard/layout tests and preview smoke before implementation.
 - [x] Implement compact island, overflow, window actions and searchable menu. Add isolated preview including settings.

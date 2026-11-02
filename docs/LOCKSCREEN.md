@@ -93,14 +93,14 @@ but the module must be reviewed/rebuilt. No install-on-lock behavior exists.
 Completed:
 
 1. C module builds with `-Wall -Wextra -Werror`; shell syntax and Python compilation pass.
-2. `tests/check_lock.py`: serialized requests, readiness flags, no inherited mutex,
+2. `dev/tests/check_lock.py`: serialized requests, readiness flags, no inherited mutex,
    cached/fallback background and propagation of locker failure.
-3. `tests/check_lock_blur.py`: four wallpaper formats, GIF first frame, cache hit
+3. `dev/tests/check_lock_blur.py`: four wallpaper formats, GIF first frame, cache hit
    and invalidation when wallpaper changes, in isolated temporary directories.
-4. GTK/Xvfb test `tests/lockscreen-ui.c`: valid Playing, Paused/Stopped/no player,
+4. GTK/Xvfb test `dev/tests/lockscreen-ui.c`: valid Playing, Paused/Stopped/no player,
    blank/malformed metadata, hidden widget visibility, required layout IDs and
    parsing all four theme CSS. Offscreen screenshots inspected with/without music.
-5. `python3 tests/preview_lock_minimal.py`: **real gtklock process** acquired the
+5. `python3 dev/tests/preview_lock_minimal.py`: **real gtklock process** acquired the
    session lock in a disposable nested Niri, loading the custom XML and module.
    Nested Niri logs confirmed `locking session`. Parent desktop was not locked.
 6. `niri validate -c /home/andrew/dotfiles/niri-staging/niri/config.kdl`: passed.

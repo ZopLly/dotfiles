@@ -4,7 +4,7 @@ Ruling: Existing staging checkout is user-selected isolation; no additional work
 Ruling: Baseline dirty files retained; integration changes will be staged via feature-only patch against HEAD, never whole-file add.
 Pre-flight: Task1 emits catalogue/state/actions; Task2 controller consumes catalogue once, groups and errors thereafter. Same JSON fields documented in module.
 Pre-flight: Task2 uses existing openPanel/openScreen exclusive drawer state; no independent simultaneous popups.
-Task 1: complete (commits d31c833..260656a, tests: python3 tests/check_applications.py → OK)
+Task 1: complete (commits d31c833..260656a, tests: python3 dev/tests/check_applications.py → OK)
 
 Task 2: GUI smoke reproduced JSON channel corruption from settings child stdout; failing regression added. Child diagnostics redirected to stderr. All action/window changes were in disposable Niri only.
 Ruling: Error banner keeps its own input region even after launcher closes; real GUI screenshot included. Drawer height follows content instead of empty fixed rectangle.

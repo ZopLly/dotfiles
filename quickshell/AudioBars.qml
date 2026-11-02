@@ -8,7 +8,7 @@ SpectrumBars {
     property bool active: false
     tint: shell.colors.cava_color || shell.colors.accent
     Process {
-        command: ["python3", Quickshell.shellDir+"/../waybar/scripts/cava_stream.py", "--json"]
+        command: ["python3", Quickshell.shellDir+"/cava_stream.py", "--json"]
         running: visualizer.active && !visualizer.shell.state.preview
         stdout: SplitParser {
             onRead: data => {

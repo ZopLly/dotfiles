@@ -3,3 +3,7 @@ __pycache__/
 
 # Native gtklock module is built locally, never versioned.
 gtklock/modules/*.so
+
+# Preserved local sources and personal configuration backups.
+/archive/
+/dev/reports/

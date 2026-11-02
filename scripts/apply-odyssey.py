@@ -36,10 +36,10 @@ def payload(live):
         if name == 'mako/config':
             data = data.decode().replace(str(ROOT), str(live)).encode()
         result[name] = data
-    result['quickshell/shell.qml'] = (ROOT/'deployment/ancient-odyssey/shell.qml').read_bytes()
+    result['quickshell/shell.qml'] = (ROOT/'legacy/deployment/ancient-odyssey/shell.qml').read_bytes()
     for path in (ROOT/'assets/themes/ancient-odyssey').iterdir():
         result[str(path.relative_to(ROOT))] = path.read_bytes()
-    result['assets/themes/ancient-odyssey/waybar.css'] = (ROOT/'deployment/ancient-odyssey/waybar.css').read_bytes()
+    result['assets/themes/ancient-odyssey/waybar.css'] = (ROOT/'legacy/deployment/ancient-odyssey/waybar.css').read_bytes()
     for theme in ('catppuccin-mocha', 'gruvbox-dark', 'tokyo-night'):
         name = 'assets/themes/'+theme+'/mako.conf'
         result[name] = (ROOT/name).read_bytes()

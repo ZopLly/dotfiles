@@ -6,6 +6,7 @@ import sys
 from preview_scope import require_session, session_enabled
 from .model import groups
 from .window_modes import WindowModes
+from .usage import Usage
 
 
 class ApplicationService:
@@ -13,6 +14,7 @@ class ApplicationService:
         self.root=Path(root).resolve();self.state_dir=Path(state_dir).resolve()
         self.entries=entries;self.preview=preview;self.runner=runner;self.children=[]
         self.modes=WindowModes(self.root,self.state_dir,preview,self.command)
+        self.usage=Usage(self.state_dir/'application-usage.json')
 
     def command(self,args):
         result=self.runner(args,capture_output=True,text=True,check=True,timeout=4)
@@ -23,7 +25,12 @@ class ApplicationService:
         windows=json.loads(self.command(['niri','msg','-j','windows']))
         if self.modes.reconcile(windows):windows=json.loads(self.command(['niri','msg','-j','windows']))
         workspaces=json.loads(self.command(['niri','msg','-j','workspaces']))
-        return dict(groups=groups(self.entries,windows,workspaces),workspaces=workspaces,preview=self.preview,window_modes=self.modes.status())
+        app_groups=groups(self.entries,windows,workspaces)
+        focused=next((g for g in app_groups if g['active']),None)
+        if focused is not None and session_enabled(self.root,self.state_dir,self.preview):
+            try:self.usage.observe(focused['desktop_id'])
+            except (OSError,ValueError):pass # A failed history write must not break the application menu.
+        return dict(groups=app_groups,workspaces=workspaces,preview=self.preview,window_modes=self.modes.status(),usage=self.usage.counts.copy())
 
     def action(self,action,value=None):
         require_session(self.root,self.state_dir,self.preview)

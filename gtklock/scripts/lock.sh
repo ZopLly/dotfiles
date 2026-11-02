@@ -42,7 +42,12 @@ module="$root/gtklock/modules/layout-module.so"
 if [[ -s "$module" && "$(gtklock --version)" == 'gtklock v4.0.'* ]]; then
     args+=(--modules "$module")
 fi
+module="$root/gtklock/modules/keyboard-module.so"
+if [[ -s "$module" && "$(gtklock --version)" == 'gtklock v4.0.'* ]]; then
+    args+=(--modules "$module")
+fi
 args+=(--layout "$root/gtklock/layout.xml")
 # Missing artwork must never prevent a real session lock.
 [[ -r "$background" && -s "$background" ]] && args+=(--background "$background")
+export NIRI_LOCK_ROOT="$root"
 gtklock --daemonize --config "$root/gtklock/config.ini" --style "$style" "${args[@]}" 9>&-

@@ -43,7 +43,7 @@
 
 ```sh
 cd /home/andrew/dotfiles/niri-staging
-python3 tests/check_staging.py
+python3 dev/tests/check_staging.py
 ./install.sh
 ```
 

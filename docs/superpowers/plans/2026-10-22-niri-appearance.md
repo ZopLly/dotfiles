@@ -23,21 +23,21 @@
 - Rendered light themes, terminal imports, and gtklock CSS paths must work outside the source theme directory.
 
 ### Task 1: Catalogue and palette data
-**Files:** assets/appearance/**, assets/wallpapers/library/**, quickshell/appearance/{__init__,catalog,palette}.py, tests/check_appearance_catalog.py.
+**Files:** assets/appearance/**, assets/wallpapers/library/**, quickshell/appearance/{__init__,catalog,palette}.py, dev/tests/check_appearance_catalog.py.
 **Interfaces:** Catalogue(root: Path), .themes(), .wallpapers(), .theme(id), .wallpaper(id); resolve_palette(catalogue, palette_id, mode=None, accent_id=None) -> dict.
 - [x] Write and run failing tests for a relocatable 22-theme/11-wallpaper catalogue, preserved hashes/animation, known original colors, accents, unknown IDs, and path escapes.
 - [x] Vendor exact upstream definitions with attribution; copy all unique originals, leaving source assets intact.
 - [x] Implement validation and normalization; rerun tests, commit.
 
 ### Task 2: Pure rendering and independent selection
-**Files:** quickshell/appearance/{render,store}.py; tests/check_appearance_state.py.
+**Files:** quickshell/appearance/{render,store}.py; dev/tests/check_appearance_state.py.
 **Interfaces:** render_theme(catalogue, selection) -> dict[str, bytes]; Store(path, catalogue).load(), .save(selection), .change(current, **fields); initial_selection(catalogue) -> dict.
 - [x] Write/run failing tests for independent changes, read-without-write initialization, invalid JSON and IDs, backup/0600 state, TOML output, preserved legacy colors, and standalone lock CSS.
 - [x] Implement the pure renderer and versioned state. Render all 36 Hyprstack variants; validate generated Niri includes in temporary configs.
 - [x] Rerun catalogue/state tests and commit.
 
 ### Task 3: Preview controller and bridge
-**Files:** quickshell/appearance/{service,bridge}.py; tests/check_appearance_service.py.
+**Files:** quickshell/appearance/{service,bridge}.py; dev/tests/check_appearance_service.py.
 **Interfaces:** AppearanceService(root, state_dir, preview).snapshot(), .select(fields); bridge reads JSON requests and writes state/error events.
 - [x] Write/run failing tests for staging/live rejection, temporary-root/session guards, independent palette/wallpaper application, serialized generations, partial failures, restart, and recovery.
 - [x] Generate and validate candidates; update only isolated preview paths. Track requested and actually displayed wallpaper separately; errors are explicit.

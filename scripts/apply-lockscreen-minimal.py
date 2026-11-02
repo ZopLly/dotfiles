@@ -6,6 +6,10 @@ ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('deploy',ROOT/'scripts/apply-odyssey.py');h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
 def payload():
     names=['gtklock/config.ini','gtklock/layout.xml','gtklock/style.css','gtklock/minimal.css','gtklock/scripts/lock.sh','gtklock/scripts/blur-background.sh','gtklock/modules/minimal-module.so']
+    for module in ('minimal','notifications','layout','keyboard'):
+        names += ['gtklock/modules/'+module+'.c','gtklock/modules/'+module+'-module.so']
+    names += ['gtklock/modules/build.sh','gtklock/modules/window-v4.h','gtklock/modules/spectrum.h','quickshell/cava_stream.py']
+    names=list(dict.fromkeys(names))
     names += ['assets/themes/'+theme+'/gtklock.css' for theme in ('ancient-odyssey','catppuccin-mocha','gruvbox-dark','tokyo-night')]
     return {name:(ROOT/name).read_bytes() for name in names}
 def restore(folder):
@@ -34,6 +38,7 @@ def main():
     if (live/'.git').exists() or not(live/'gtklock/scripts/lock.sh').is_file():raise RuntimeError('Expected installed snapshot')
     if not subprocess.check_output(['gtklock','--version'],text=True).strip().startswith('gtklock v4.0.'):raise RuntimeError('Module audited for gtklock 4.0 only')
     subprocess.run(['python3',str(ROOT/'scripts/lockscreen-tokens.py'),'--check'],check=True)
+    subprocess.run(['bash',str(ROOT/'gtklock/modules/build.sh')],check=True)
     files=payload();print('Target:',live);print('Files:',*files,sep='\n');print('No lock, service change, session restart or PAM changes.')
     if not args.apply:return
     if subprocess.run(['pgrep','-u',str(os.getuid()),'-x','gtklock'],stdout=subprocess.DEVNULL).returncode==0:raise RuntimeError('Unlock existing gtklock before deployment')
@@ -46,17 +51,11 @@ def main():
         if exists:
             saved=folder/'files'/name;saved.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(target,saved)
         manifest['files'].append(dict(name=name,existed=exists,mode=mode,installed=h.digest(data)))
-    cache=Path(os.environ.get('XDG_CACHE_HOME',str(Path.home()/'.cache')))
-    theme=(live/'assets/themes/current').resolve().name
-    # Keep the previous blur and signature as part of the same rollback manifest.
-    for suffix in ('.jpg','.jpg.signature'):
-        target=cache/('gtklock-'+theme+suffix)
-        if target.exists():shutil.copy2(target,folder/('old-blur'+suffix))
-        manifest['cache'].append(str(target))
+    # Appearance-only update: preserve all wallpaper caches without reading them.
     h.atomic(folder/'manifest.json',json.dumps(manifest,indent=2).encode(),0o600)
     try:
         for item in manifest['files']:h.atomic(live/item['name'],files[item['name']],item['mode'])
-        subprocess.run(['bash',str(live/'gtklock/scripts/blur-background.sh')],check=True,timeout=30)
+        # No image processing and no running locker or service is restarted.
     except BaseException:
         restore(folder);raise
     print('Applied for NEXT lock. Backup:',folder)

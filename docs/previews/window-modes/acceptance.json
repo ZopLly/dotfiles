@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "columns": true,
+  "stack": true,
+  "resized_floating_restored": true,
+  "other_workspace_untouched": true,
+  "before": {
+    "2": [
+      1,
+      false,
+      [
+        1,
+        1
+      ],
+      [
+        418,
+        509
+      ]
+    ],
+    "3": [
+      1,
+      false,
+      [
+        1,
+        2
+      ],
+      [
+        418,
+        510
+      ]
+    ],
+    "4": [
+      2,
+      false,
+      [
+        1,
+        1
+      ],
+      [
+        418,
+        1032
+      ]
+    ]
+  },
+  "after": {
+    "2": [
+      1,
+      false,
+      [
+        1,
+        1
+      ],
+      [
+        418,
+        509
+      ]
+    ],
+    "3": [
+      1,
+      false,
+      [
+        1,
+        2
+      ],
+      [
+        418,
+        510
+      ]
+    ],
+    "4": [
+      2,
+      false,
+      [
+        1,
+        1
+      ],
+      [
+        418,
+        1032
+      ]
+    ]
+  }
+}

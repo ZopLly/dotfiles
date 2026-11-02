@@ -36,7 +36,11 @@ if [[ -f "$themes/$selected/gtk-theme.txt" ]]; then
 fi
 refresh gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 if pgrep -x waybar >/dev/null; then refresh pkill -SIGUSR2 -x waybar; fi
-if pgrep -x eww >/dev/null; then refresh eww --config "$root/eww" reload; fi
+if pgrep -x eww >/dev/null; then
+    eww_config="$root/eww"
+    [[ -d "$eww_config" ]] || eww_config="$root/legacy/eww"
+    refresh eww --config "$eww_config" reload
+fi
 if pgrep -x mako >/dev/null; then refresh makoctl reload; fi
 refresh "$root/gtklock/scripts/blur-background.sh"
 # Fuzzel reads the selected theme on its next launch.

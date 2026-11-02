@@ -1,9 +1,10 @@
 /* Optional display-only gtklock 4 module. Never reads the password or authenticates. */
 #include <gio/gio.h>
 #include "window-v4.h"
+#include "spectrum.h"
 guint module_major_version = 4, module_minor_version = 0;
 struct GtkLock;
-typedef struct { GtkWidget *media, *battery; } View;
+typedef struct { GtkWidget *media, *battery, *media_card, *spectrum; } View;
 static GList *views;
 static GHashTable *players;
 static GDBusProxy *battery;
@@ -26,7 +27,7 @@ static gchar *track_text(GDBusProxy *proxy) {
     GVariant *artists = g_variant_lookup_value(metadata, "xesam:artist", G_VARIANT_TYPE_STRING_ARRAY);
     gchar *artist = NULL;
     if (artists && g_variant_n_children(artists)) g_variant_get_child(artists, 0, "s", &artist);
-    gchar *text = artist && *artist ? g_strdup_printf("♪ %s — %s", clean, artist) : g_strdup_printf("♪ %s", clean);
+    gchar *text = artist && *artist ? g_strdup_printf("СЕЙЧАС ИГРАЕТ\n\n♪ %s — %s", clean, artist) : g_strdup_printf("СЕЙЧАС ИГРАЕТ\n\n♪ %s", clean);
     g_free(clean); g_free(artist); if (artists) g_variant_unref(artists); g_variant_unref(metadata);
     return text;
 }
@@ -52,9 +53,12 @@ static void render(void) {
     }
     for (GList *l=views;l;l=l->next) {
         View *v=l->data;
-        gtk_label_set_text(GTK_LABEL(v->media),music ? music : ""); gtk_widget_set_visible(v->media,music != NULL);
+        gtk_label_set_text(GTK_LABEL(v->media),music ? music : "МУЗЫКА\n\nНичего не играет"); gtk_widget_show(v->media);
+        if(v->media_card)gtk_widget_show(v->media_card);
+        if(v->spectrum)gtk_widget_set_visible(v->spectrum,music != NULL);
         gtk_label_set_text(GTK_LABEL(v->battery),power ? power : ""); gtk_widget_set_visible(v->battery,power != NULL);
     }
+    spectrum_sync(music!=NULL);
     g_free(music); g_free(power);
 }
 static void changed(GDBusProxy *p, GVariant *v, const gchar *const *invalid, gpointer data) {
@@ -98,6 +102,7 @@ static void battery_ready(GObject *obj,GAsyncResult *result,gpointer data) {
 static GtkWidget *label(const gchar *name) {
     GtkWidget *w=gtk_label_new(NULL);gtk_widget_set_name(w,name);gtk_widget_set_no_show_all(w,TRUE);
     gtk_label_set_ellipsize(GTK_LABEL(w),PANGO_ELLIPSIZE_END);gtk_label_set_max_width_chars(GTK_LABEL(w),40);
+    gtk_label_set_xalign(GTK_LABEL(w),0);
     gtk_widget_set_can_focus(w,FALSE);return w;
 }
 static View *minimal_attach(struct Window *win) {
@@ -108,7 +113,13 @@ static View *minimal_attach(struct Window *win) {
         if(g_strcmp0(gtk_widget_get_name(it->data),"lock-footer")==0)footer=it->data;
     g_list_free(children);
     gtk_widget_set_halign(v->media,GTK_ALIGN_START);gtk_widget_set_valign(v->media,GTK_ALIGN_END);
-    gtk_box_pack_start(GTK_BOX(footer?footer:win->window_box),v->media,TRUE,TRUE,0);
+    v->media_card=gtk_box_new(GTK_ORIENTATION_VERTICAL,8);gtk_widget_set_name(v->media_card,"lock-media-card");
+    gtk_widget_set_halign(v->media_card,GTK_ALIGN_START);gtk_widget_set_valign(v->media_card,GTK_ALIGN_END);
+    gtk_box_pack_start(GTK_BOX(v->media_card),v->media,FALSE,FALSE,0);
+    v->spectrum=spectrum_attach();gtk_box_pack_start(GTK_BOX(v->media_card),v->spectrum,FALSE,FALSE,0);
+    gtk_label_set_text(GTK_LABEL(v->media),"МУЗЫКА\n\nНичего не играет");
+    gtk_widget_set_no_show_all(v->media,FALSE);
+    gtk_box_pack_start(GTK_BOX(footer?footer:win->window_box),v->media_card,TRUE,TRUE,0);
     gtk_widget_set_halign(v->battery,GTK_ALIGN_END);gtk_widget_set_valign(v->battery,GTK_ALIGN_START);gtk_widget_set_margin_top(v->battery,24);gtk_widget_set_margin_end(v->battery,48);
     gtk_overlay_add_overlay(GTK_OVERLAY(win->overlay),v->battery);
     g_object_set_data(G_OBJECT(win->window),"minimal-view",v);views=g_list_prepend(views,v);
@@ -121,5 +132,5 @@ void on_window_create(struct GtkLock *lock,struct Window *win) {
     render();
 }
 void on_window_destroy(struct GtkLock *lock,struct Window *win) {
-    (void)lock;View *v=g_object_get_data(G_OBJECT(win->window),"minimal-view");views=g_list_remove(views,v);g_free(v);
+    (void)lock;View *v=g_object_get_data(G_OBJECT(win->window),"minimal-view");views=g_list_remove(views,v);if(v && v->spectrum)spectrum_detach(v->spectrum);g_free(v);
 }

@@ -61,7 +61,7 @@ def client(base,smoke=False,window_modes=False,dashboard_only=False):
         rpc('menu');wait(lambda s:s['panel']=='launcher');shot('applications-launcher')
         (base/'applications-ready').write_text('Menu and isolated desktop ready')
         if window_modes:
-            subprocess.run([sys.executable,str(ROOT/'tests/preview_window_modes.py'),str(base)],check=True,stdout=log,stderr=log)
+            subprocess.run([sys.executable,str(ROOT/'dev/tests/preview_window_modes.py'),str(base)],check=True,stdout=log,stderr=log)
             (base/'applications-result.json').write_bytes((base/'window-modes-result.json').read_bytes())
             return
         if not smoke:

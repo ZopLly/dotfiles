@@ -8,6 +8,7 @@ def render_theme(catalogue,selection):
         files={name:catalogue.legacy_file(selection['palette_id'],name).read_bytes() for name in
             ('waybar.css','alacritty.toml','fuzzel.ini','mako.conf','gtklock.css','niri-runtime.kdl','eww.scss')}
         files['gtklock.css']=files['gtklock.css'].replace(b'../../../gtklock/minimal.css',str(catalogue.root/'gtklock/minimal.css').encode())
+        files['mako.conf']=('background-color='+p['bg']+'\ntext-color='+p['fg']+'\nborder-color='+p['accent']+'\nprogress-color=over '+p['surface']+'\n[urgency=critical]\nborder-color='+p['error']+'\n').encode()
         files['palette.json']=json.dumps({k:v for k,v in p.items() if k!='legacy_path'}).encode()
         return files
     bg,fg,accent,surface,outline,error=(p[k] for k in ('bg','fg','accent','surface','outline','error'))

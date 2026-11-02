@@ -10,7 +10,8 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPONENTS = ('alacritty', 'waybar', 'eww', 'fuzzel', 'mako', 'gtklock', 'quickshell')
+COMPONENTS = ('alacritty', 'fuzzel', 'mako', 'gtklock', 'quickshell')
+LEGACY_COMPONENTS = ('waybar', 'eww')
 SOURCES = COMPONENTS + ('niri', 'assets', 'scripts', 'session', 'systemd')
 DEPENDENCIES = ('niri', 'bash', 'jq', 'alacritty', 'fuzzel',
                 'mako', 'gtklock', 'swayidle', 'awww', 'awww-daemon', 'magick',
@@ -54,9 +55,10 @@ def main():
         else:
             rollback(args.rollback)
         return
+    components = COMPONENTS + (LEGACY_COMPONENTS if args.shell == 'legacy' else ())
     print('Snapshot source:', ROOT)
     print('Config destination:', config)
-    print('Components:', ', '.join(COMPONENTS + ('niri',)))
+    print('Components:', ', '.join(components + ('niri',)))
     print('Existing directories will be backed up; their extra files are retained in the snapshot.')
     print('swayidle.service will be installed, but not enabled or restarted automatically.')
     required=DEPENDENCIES + (('waybar','eww','gsimplecal') if args.shell=='legacy' else ())
@@ -80,7 +82,7 @@ def main():
     for name in SOURCES:
         dest = release / name
         # Preserve application-specific files that are not managed by this repository.
-        if name in COMPONENTS + ('niri',) and (config / name).is_dir():
+        if name in components + ('niri',) and (config / name).is_dir():
             shutil.copytree(config / name, dest, symlinks=True)
         # Overlay safely: never write through a copied pre-existing symlink.
         for source in (ROOT / name).rglob('*'):
@@ -135,7 +137,15 @@ def main():
         (release/'niri/conf.d/outputs.kdl').write_text(existing.read_text() if existing.is_file() else '// Outputs are detected automatically.\n')
     (release/'systemd/user/swayidle.service').write_text((release/'systemd/user/swayidle.service').read_text().replace('/home/andrew/',str(Path.home())+'/'))
     if args.shell == 'legacy':
-        shutil.copy2(release/'niri/config-legacy.kdl', release/'niri/config.kdl')
+        for name in LEGACY_COMPONENTS:
+            shutil.copytree(ROOT/'legacy'/name, release/name, symlinks=False)
+        for name in LEGACY_COMPONENTS:
+            for source in (release/name).rglob('*'):
+                if source.is_file() and source.suffix in ('.sh','.py','.css','.scss','.yuck','.jsonc'):
+                    text=source.read_text().replace(str(ROOT),str(release)).replace('/home/andrew/dotfiles',str(release))
+                    source.write_text(text)
+        legacy_config=(ROOT/'legacy/niri/config.kdl').read_text().replace(str(ROOT),str(release))
+        (release/'niri/config.kdl').write_text(legacy_config)
     subprocess.run(['niri', 'validate', '-c', str(release / 'niri/config.kdl')], check=True)
     # Reject broken managed symlinks before touching any installed configuration.
     for name in SOURCES:
@@ -146,7 +156,7 @@ def main():
     if args.stage_only:
         print('Validated snapshot (not installed):', release)
         return
-    targets = [(config / name, release / name) for name in COMPONENTS]
+    targets = [(config / name, release / name) for name in components]
     targets.append((config / 'systemd/user/swayidle.service', release / 'systemd/user/swayidle.service'))
     targets.append((config / 'niri', release / 'niri'))
     journal = []

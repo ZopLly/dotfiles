@@ -1,7 +1,0 @@
-spawn-at-startup "waybar"
-spawn-at-startup "mako"
-spawn-at-startup "swaybg -i ~/dotfiles/assets/wallpapers/wallpaper.png"
-spawn-at-startup "awww-daemon"
-// To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
-// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
-

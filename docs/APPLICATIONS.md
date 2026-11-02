@@ -21,7 +21,7 @@
 - `Bar.qml`, `shell.qml`: небольшие дополнения, связывающие новые компоненты с существующей панелью и общим правилом одной открытой шторки.
 - `preview_scope.py`: общая с оформлением проверка путей, владельца маркера и настоящего приватного сокета Niri.
 
-Проверки: `python3 tests/check_applications.py`, `python3 tests/check_applications_preview.py`, QtTest `tests/qml/tst_applications.qml`, `./applications-preview.sh --smoke`. Smoke управляет настоящими тестовыми окнами, проверяет фокус, полный экран, закрытие, запуск терминала, ограничение внешних приложений и переход к оформлению. Проверяется и прежний appearance smoke. Все исходные проверки запускаются отдельно; календарь требует уже установленный `~/.local/share/niri-shell/calendar-venv/bin/python`, которым пользуется его штатный launcher.
+Проверки: `python3 dev/tests/check_applications.py`, `python3 dev/tests/check_applications_preview.py`, QtTest `dev/tests/qml/tst_applications.qml`, `./applications-preview.sh --smoke`. Smoke управляет настоящими тестовыми окнами, проверяет фокус, полный экран, закрытие, запуск терминала, ограничение внешних приложений и переход к оформлению. Проверяется и прежний appearance smoke. Все исходные проверки запускаются отдельно; календарь требует уже установленный `~/.local/share/niri-shell/calendar-venv/bin/python`, которым пользуется его штатный launcher.
 
 Следующие этапы: переключение режима окон текущего стола с сохранением раскладки; затем общие настройки, уведомления и блокировка. Это ещё не установочная сборка завершённого окружения.
 

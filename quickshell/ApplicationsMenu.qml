@@ -6,13 +6,12 @@ Item {
     id: menu
     required property var shell
     property var entries: []
-    property var favorites: ["firefox.desktop","Alacritty.desktop","chatgpt.desktop","Happ.desktop"]
+    property var usage: shell.applications.state?.usage || ({})
     property var results: {
         let query=search.text.trim().toLocaleLowerCase()
         return entries.filter(e => (e.name+" "+e.id).toLocaleLowerCase().includes(query)).slice().sort((a,b) => {
             if (query!=="") return a.name.localeCompare(b.name)
-            let ai=favorites.indexOf(a.id), bi=favorites.indexOf(b.id)
-            return (ai<0?999:ai)-(bi<0?999:bi) || a.name.localeCompare(b.name)
+            return (usage[b.id] || 0)-(usage[a.id] || 0) || a.name.localeCompare(b.name)
         })
     }
     signal launch(string id)
@@ -36,7 +35,7 @@ Item {
             onAccepted:if (menu.results.length) menu.launch(menu.results[0].id)
             Keys.onDownPressed: { grid.forceActiveFocus();grid.currentIndex=0 }
         }
-        Text { text:search.text===""?"Частые приложения — в начале списка":"Найдено: "+menu.results.length; color:menu.shell.colors.fg_dim; font.pixelSize:11 }
+        Text { text:search.text===""?"Чаще используемые — в начале списка":"Найдено: "+menu.results.length; color:menu.shell.colors.fg_dim; font.pixelSize:11 }
         GridView {
             id:grid; objectName:"applicationGrid"
             Layout.fillWidth:true; Layout.fillHeight:true; clip:true

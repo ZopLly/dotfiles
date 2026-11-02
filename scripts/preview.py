@@ -26,9 +26,11 @@ def jsonc(text):
 def prepare(base, legacy=False):
     config = base / 'config'
     config.mkdir()
-    shutil.copy2(ROOT/'tests/mpris_mock.py', base/'mpris_mock.py')
-    for name in ('niri', 'eww', 'waybar', 'alacritty', 'assets', 'quickshell', 'fuzzel'):
+    shutil.copy2(ROOT/'dev/tests/mpris_mock.py', base/'mpris_mock.py')
+    for name in ('niri', 'alacritty', 'assets', 'quickshell', 'fuzzel'):
         shutil.copytree(ROOT / name, config / name, symlinks=False, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    for name in ('eww', 'waybar'):
+        shutil.copytree(ROOT/'legacy'/name, config/name, symlinks=False)
     # Test-only IPC injection: never included in deployed shell.qml.
     shell_file = config/'quickshell/shell.qml'
     shell_text = shell_file.read_text().replace('        function status(): string',
@@ -275,7 +277,7 @@ def main():
     args = parser.parse_args()
     if args.client:
         return client(args.client)
-    for binary in ('niri', 'dbus-run-session', 'eww', 'waybar', 'awww', 'awww-daemon', 'alacritty', 'qs', 'fuzzel'):
+    for binary in ('niri', 'dbus-run-session', 'awww', 'awww-daemon', 'alacritty', 'qs', 'fuzzel') + (('eww', 'waybar') if args.legacy else ()):
         if not shutil.which(binary):
             raise RuntimeError(f'Missing dependency: {binary}')
     parent_display = os.environ.get('WAYLAND_DISPLAY')

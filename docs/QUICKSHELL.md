@@ -1,6 +1,6 @@
 # Новая оболочка: первая рабочая версия
 
-Статус: подготовлена в niri-staging; основная установленная сессия не переключена.
+Историческое описание первой версии. Сейчас Quickshell уже используется в рабочей сессии; актуальные входные точки описаны в README.md и PROJECT-STRUCTURE.md.
 
 ## Что сделано
 
@@ -82,10 +82,10 @@ Fuzzel показывает настоящие приложения с икон�
 ## Проверки
 
 ```sh
-python3 tests/check_cava.py
-python3 tests/check_shell.py
-python3 tests/check_preview.py
-python3 tests/check_staging.py
+python3 dev/tests/check_cava.py
+python3 dev/tests/check_shell.py
+python3 dev/tests/check_preview.py
+python3 dev/tests/check_staging.py
 ./preview.sh --smoke
 ```
 
@@ -130,7 +130,7 @@ this configuration does not change browser preferences. Spotify restores its own
 account state. The supported executables must be installed normally on PATH.
 The legacy shell and isolated preview do not start the session manager.
 
-Checks: `python3 tests/check_session.py` tests app filtering, workspace mapping,
+Checks: `python3 dev/tests/check_session.py` tests app filtering, workspace mapping,
 private atomic storage, reuse/launch of windows, and shutdown/cancellation signals
 with mocks. No real applications are launched by these tests.
 
@@ -171,7 +171,7 @@ The launch mutex is not inherited by the daemon. Blurring is done at login with
 an atomic cache replacement; locking uses the cache or the original lock wallpaper
 immediately. No password/PAM configuration changes are made.
 
-`python3 tests/check_lock.py` uses fake commands to check concurrent requests,
+`python3 dev/tests/check_lock.py` uses fake commands to check concurrent requests,
 background selection and error propagation without locking the desktop.
 Real lock/unlock and suspend/resume require a user check after installation and
 logging in again (the running swayidle service still uses the previous release).
@@ -189,7 +189,7 @@ shown on the card). A separate process refreshes every 15 minutes, with a
 10-second network timeout and five-minute retries. Last successful data lives in
 `$XDG_CACHE_HOME/niri-shell/weather-moscow.json`; offline readings are marked and
 dated. Preview uses clearly labelled sample weather and makes no API requests.
-Tests: `python3 tests/check_weather.py`; live Moscow response parsing was also
+Tests: `python3 dev/tests/check_weather.py`; live Moscow response parsing was also
 checked without changing the active configuration.
 
 ## Google Calendar events (read-only)
@@ -230,6 +230,6 @@ option is absent on a managed Google account, an administrator may have disabled
 it; account sign-in/OAuth would require a separate integration. No events can be
 created or edited from this widget.
 
-Tests: `/tmp/niri-calendar-test/bin/python tests/check_calendar.py` in this
+Tests: `/tmp/niri-calendar-test/bin/python dev/tests/check_calendar.py` in this
 session; after setup use `~/.local/share/niri-shell/calendar-venv/bin/python
- tests/check_calendar.py`. Dependencies are pinned in calendar-requirements.txt.
+ dev/tests/check_calendar.py`. Dependencies are pinned in calendar-requirements.txt.

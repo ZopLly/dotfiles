@@ -6,7 +6,7 @@ command -v pacman >/dev/null || { echo 'Supported systems: Arch Linux, Endeavour
 packages=(niri quickshell gtklock swayidle awww alacritty fuzzel mako imagemagick
     playerctl wireplumber pamixer brightnessctl cava curl libnotify glib2 gtk3
     pavucontrol network-manager-applet networkmanager blueman bluez-utils libpulse
-    python python-gobject python-pillow python-icalendar python-recurring-ical-events
+    json-glib python python-gobject python-pillow python-icalendar python-recurring-ical-events
     gcc pkgconf jq firefox ttf-jetbrains-mono-nerd xwayland-satellite
     xdg-desktop-portal xdg-desktop-portal-gnome)
 sudo pacman -S --needed "${packages[@]}" </dev/tty

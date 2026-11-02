@@ -8,10 +8,10 @@
 
 ```sh
 niri validate -c /home/andrew/dotfiles/niri-staging/niri/config.kdl
-python3 tests/check_shell.py
-python3 tests/check_system_state.py
-python3 tests/check_weather.py
-python3 tests/check_preview.py
+python3 dev/tests/check_shell.py
+python3 dev/tests/check_system_state.py
+python3 dev/tests/check_weather.py
+python3 dev/tests/check_preview.py
 ./preview.sh --smoke
 ```
 

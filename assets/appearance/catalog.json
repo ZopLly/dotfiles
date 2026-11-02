@@ -178,6 +178,18 @@
       "label": "Гентский алтарь",
       "group": "hyprstack",
       "origin": "Ghent-Altarpiece.png"
+    },
+    {
+      "id": "wallpaper:fb5284ed9af0a56ccf213e4738ffc888f08438f1bee108590f68e9a9fe3d7a4f",
+      "sha256": "fb5284ed9af0a56ccf213e4738ffc888f08438f1bee108590f68e9a9fe3d7a4f",
+      "bytes": 3181740,
+      "width": 1536,
+      "height": 1024,
+      "frames": 1,
+      "file": "assets/wallpapers/library/fb5284ed9af0a56ccf213e4738ffc888f08438f1bee108590f68e9a9fe3d7a4f.png",
+      "label": "Тайная вечеря",
+      "group": "custom",
+      "origin": "тайноевечеря2.png"
     }
   ]
 }

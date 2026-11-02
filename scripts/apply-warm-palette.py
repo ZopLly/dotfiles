@@ -8,7 +8,7 @@ h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
 
 def payload():
     files={str(p.relative_to(ROOT)):p.read_bytes() for p in (ROOT/'assets/themes/ancient-odyssey').iterdir() if p.is_file()}
-    files['assets/themes/ancient-odyssey/waybar.css']=(ROOT/'deployment/ancient-odyssey/waybar.css').read_bytes()
+    files['assets/themes/ancient-odyssey/waybar.css']=(ROOT/'legacy/deployment/ancient-odyssey/waybar.css').read_bytes()
     for theme in ('catppuccin-mocha','gruvbox-dark','tokyo-night'):
         name=f'assets/themes/{theme}/terminal-opacity.toml';files[name]=(ROOT/name).read_bytes()
     # Relative import keeps the existing current-theme link authoritative.

@@ -9,7 +9,7 @@ static gboolean notification_started;
 
 static gchar *notification_text(GVariant *items) {
     if (!items || !g_variant_is_of_type(items,G_VARIANT_TYPE("aa{sv}"))) return NULL;
-    GString *text=g_string_new(NULL);
+    GString *text=g_string_new("УВЕДОМЛЕНИЯ\n\n");
     gsize count=MIN(g_variant_n_children(items),3);
     for (gsize i=0;i<count;i++) {
         GVariant *card=g_variant_get_child_value(items,i);
@@ -29,8 +29,8 @@ static void notification_render(void) {
     GVariant *value=owner?g_dbus_proxy_get_cached_property(notification_proxy,"Notifications"):NULL;
     gchar *text=notification_text(value);
     for (GList *item=notification_labels;item;item=item->next) {
-        gtk_label_set_text(GTK_LABEL(item->data),text?text:"");
-        gtk_widget_set_visible(item->data,text!=NULL);
+        gtk_label_set_text(GTK_LABEL(item->data),text?text:"УВЕДОМЛЕНИЯ\n\nНет новых уведомлений");
+        gtk_widget_show(item->data);
     }
     g_free(owner);g_free(text);if(value)g_variant_unref(value);
 }
@@ -52,7 +52,7 @@ static void notification_ready(GObject *object,GAsyncResult *result,gpointer dat
 static GtkWidget *notification_attach(struct Window *window) {
     GtkWidget *label=gtk_label_new(NULL);
     gtk_widget_set_name(label,"lock-notifications");
-    gtk_widget_set_no_show_all(label,TRUE);gtk_widget_set_can_focus(label,FALSE);
+    gtk_widget_set_no_show_all(label,FALSE);gtk_widget_set_can_focus(label,FALSE);
     gtk_label_set_line_wrap(GTK_LABEL(label),TRUE);gtk_label_set_max_width_chars(GTK_LABEL(label),42);
     gtk_label_set_width_chars(GTK_LABEL(label),36);gtk_label_set_lines(GTK_LABEL(label),12);
     gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);gtk_label_set_xalign(GTK_LABEL(label),0);
@@ -68,6 +68,7 @@ static GtkWidget *notification_attach(struct Window *window) {
         gtk_overlay_add_overlay(GTK_OVERLAY(window->overlay),label);
         gtk_overlay_set_overlay_pass_through(GTK_OVERLAY(window->overlay),label,TRUE);
     }
+    gtk_label_set_text(GTK_LABEL(label),"УВЕДОМЛЕНИЯ\n\nНет новых уведомлений");
     notification_labels=g_list_prepend(notification_labels,label);
     g_object_set_data(G_OBJECT(window->window),"notification-label",label);
     return label;

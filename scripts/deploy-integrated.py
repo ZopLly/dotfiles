@@ -40,15 +40,15 @@ def prepare(applications_only=False):
         active.symlink_to('_installed-current')
         shutil.copy2(ROOT/'gtklock/minimal.css',candidate/'gtklock/minimal.css')
         for relative in ('layout.xml','scripts/lock.sh','scripts/blur-background.sh','modules/notifications.c',
-                         'modules/minimal.c','modules/layout.c','modules/build.sh',
-                         'modules/window-v4.h','modules/build-notifications.sh'):
+                         'modules/minimal.c','modules/layout.c','modules/keyboard.c','modules/build.sh',
+                         'modules/window-v4.h','modules/spectrum.h','modules/build-notifications.sh'):
             destination=candidate/'gtklock'/relative
             destination.parent.mkdir(parents=True,exist_ok=True)
             shutil.copy2(ROOT/'gtklock'/relative,destination)
         subprocess.run(['bash',str(candidate/'gtklock/modules/build.sh')],check=True)
 
         shutil.copy2(ROOT/IDLE_UNIT,candidate/IDLE_UNIT)
-        shutil.copy2(ROOT/'waybar/scripts/cava_stream.py',candidate/'waybar/scripts/cava_stream.py')
+        shutil.copy2(ROOT/'quickshell/cava_stream.py',candidate/'quickshell/cava_stream.py')
         wallpaper=candidate/'scripts/wallpaper.sh'
         content=wallpaper.read_text()
         start=content.index('wallpaper=');end=content.index('\n[[ -n',start)

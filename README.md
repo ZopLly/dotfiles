@@ -62,3 +62,9 @@ python3 /путь/к/снимку/scripts/install.py --rollback /путь/к/man
 - [Изолированный предпросмотр](docs/PREVIEW.md)
 - [Режимы окон](docs/WINDOW-MODES.md)
 - [Правила работы](AGENTS.md)
+
+## Структура исходников
+
+Основная оболочка — `quickshell/`; прежняя — `legacy/`.
+Проверки разработки находятся в `dev/tests/` и не устанавливаются в сессию.
+[Карта проекта](docs/PROJECT-STRUCTURE.md) · [Разработка](dev/README.md)
