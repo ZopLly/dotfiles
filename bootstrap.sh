@@ -14,7 +14,8 @@ mkdir "$work/source"
 tar --extract --gzip --file "$work/source.tar.gz" --directory "$work/source" --strip-components=1 --no-same-owner --no-same-permissions
 [[ -f "$work/source/scripts/install.py" && -f "$work/source/quickshell/Dashboard.qml" ]] || { echo 'Incomplete source archive' >&2; exit 1; }
 if [[ "${1:-}" == '--check' ]]; then
-    bash "$work/source/install.sh"
+    shift
+    bash "$work/source/install.sh" --portable --check "$@"
     exit
 fi
 bash "$work/source/scripts/install-deps.sh"

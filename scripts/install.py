@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = ('alacritty', 'fuzzel', 'mako', 'gtklock', 'quickshell')
@@ -22,28 +23,103 @@ DEPENDENCIES = ('niri', 'bash', 'jq', 'alacritty', 'fuzzel',
 def exists(path):
     return path.exists() or path.is_symlink()
 
-def rollback(manifest):
-    data = json.loads(manifest.read_text())
-    # Do not overwrite changes made after installation.
+def runtime_text(text, release, config):
+    prefixes = {str(ROOT), '/home/andrew/dotfiles/niri-staging',
+                '/home/andrew/dotfiles', '~/dotfiles/niri-staging', '~/dotfiles'}
+    for prefix in sorted(prefixes, key=len, reverse=True):
+        text = text.replace(prefix, str(release))
+    return text.replace('~/.config', str(config)).replace('/home/andrew/.config', str(config))
+
+def write_manifest(path, data):
+    # Publish a complete recovery plan before moving the first configuration.
+    fd, temporary = tempfile.mkstemp(prefix='.manifest-', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'w') as stream:
+            json.dump(data, stream, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+def restore_links(data, allow_pending=False):
+    actions = []
+    # Preflight every target before restoring any of them.
     for item in data:
-        target = Path(item['target'])
-        if not target.is_symlink() or str(target.readlink()) != item['source']:
+        target, saved = Path(item['target']), Path(item['backup'])
+        linked = target.is_symlink() and str(target.readlink()) == item['source']
+        pending = allow_pending or item.get('installed') is False
+        if linked:
+            if item.get('existed') and not exists(saved):
+                raise RuntimeError(f'Missing backup: {saved}')
+            actions.append((target, saved, True))
+        elif pending and not exists(target) and exists(saved):
+            actions.append((target, saved, False))
+        elif pending and not exists(saved):
+            continue  # This entry has not been touched yet.
+        else:
             raise RuntimeError(f'Target changed since installation: {target}')
-    for item in reversed(data):
-        target = Path(item['target'])
-        target.unlink()
-        backup = Path(item['backup'])
-        if exists(backup):
-            backup.rename(target)
+    for target, saved, linked in reversed(actions):
+        if linked:
+            target.unlink()
+        if exists(saved):
+            saved.rename(target)
+
+def rollback(manifest):
+    restore_links(json.loads(manifest.read_text()))
     manifest.rename(manifest.with_suffix('.restored.json'))
     subprocess.run(['systemctl','--user','daemon-reload'],capture_output=True,check=False)
+
+def install_links(targets, backup):
+    manifest = backup / 'manifest.json'
+    journal = [dict(target=str(target), source=str(source), backup=str(backup/str(i)),
+                    existed=exists(target), installed=False)
+               for i, (target, source) in enumerate(targets)]
+    write_manifest(manifest, journal)
+    try:
+        for item in journal:
+            target = Path(item['target'])
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if item['existed']:
+                target.rename(item['backup'])
+            target.symlink_to(item['source'])
+            item['installed'] = True
+        write_manifest(manifest, journal)
+    except BaseException:
+        restore_links(journal, allow_pending=True)
+        manifest.rename(manifest.with_suffix('.restored.json'))
+        raise
+    return manifest
+
+def isolated_check(args):
+    # Build a relocated source tree under a disposable HOME, never the user's config.
+    with tempfile.TemporaryDirectory(prefix='niri-shell-check-') as folder:
+        scratch = Path(folder)
+        source = scratch/'source'
+        source.mkdir()
+        names = SOURCES + (('legacy',) if args.shell == 'legacy' else ())
+        for name in names:
+            shutil.copytree(ROOT/name, source/name, symlinks=True,
+                            ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.so', 'backups'))
+        home = scratch/'home'
+        home.mkdir()
+        env = dict(os.environ, HOME=str(home), XDG_CONFIG_HOME=str(home/'.config'),
+                   XDG_STATE_HOME=str(home/'.local/state'), XDG_CACHE_HOME=str(home/'.cache'))
+        command = [sys.executable, str(source/'scripts/install.py'), '--stage-only', '--shell', args.shell]
+        if args.portable:
+            command.append('--portable')
+        subprocess.run(command, env=env, check=True)
+    print('Check passed: relocated snapshot built and validated; installed configuration unchanged.')
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--shell', choices=('quickshell', 'legacy'), default='quickshell', help='Choose the new shell or previous Waybar/Eww setup')
     parser.add_argument('--portable', action='store_true', help='Use automatic monitor setup and native shell bindings on a new computer')
-    parser.add_argument('--apply', action='store_true')
-    parser.add_argument('--stage-only', action='store_true', help='Build and validate a snapshot without installing it')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--apply', action='store_true')
+    mode.add_argument('--check', action='store_true', help='Build and validate in a disposable HOME without installing')
+    mode.add_argument('--stage-only', action='store_true', help='Build and validate a snapshot without installing it')
     parser.add_argument('--rollback', type=Path, metavar='MANIFEST')
     args = parser.parse_args()
     config = Path(os.environ.get('XDG_CONFIG_HOME', str(Path.home() / '.config'))).absolute()
@@ -65,8 +141,11 @@ def main():
     missing = [name for name in required if not shutil.which(name)]
     if missing:
         print('Missing dependencies:', ', '.join(missing))
-        if args.apply or args.stage_only:
+        if args.apply or args.stage_only or args.check:
             raise RuntimeError('Install missing dependencies before proceeding.')
+    if args.check:
+        isolated_check(args)
+        return
     if not args.apply and not args.stage_only:
         print('Preview only. No files changed.')
         return
@@ -115,8 +194,7 @@ def main():
                 text = source.read_text()
             except UnicodeError:
                 continue
-            text = text.replace(str(ROOT), str(release)).replace('/home/andrew/dotfiles', str(release)).replace('~/dotfiles', str(release))
-            text = text.replace('~/.config', str(config)).replace('/home/andrew/.config', str(config))
+            text = runtime_text(text, release, config)
             (release / source.relative_to(ROOT)).write_text(text)
     # Authorize the installed snapshot for native panel actions, never the source checkout.
     marker=release/'.shell-release.json'
@@ -142,9 +220,9 @@ def main():
         for name in LEGACY_COMPONENTS:
             for source in (release/name).rglob('*'):
                 if source.is_file() and source.suffix in ('.sh','.py','.css','.scss','.yuck','.jsonc'):
-                    text=source.read_text().replace(str(ROOT),str(release)).replace('/home/andrew/dotfiles',str(release))
+                    text=runtime_text(source.read_text(), release, config)
                     source.write_text(text)
-        legacy_config=(ROOT/'legacy/niri/config.kdl').read_text().replace(str(ROOT),str(release))
+        legacy_config=runtime_text((ROOT/'legacy/niri/config.kdl').read_text(), release, config)
         (release/'niri/config.kdl').write_text(legacy_config)
     subprocess.run(['niri', 'validate', '-c', str(release / 'niri/config.kdl')], check=True)
     # Reject broken managed symlinks before touching any installed configuration.
@@ -153,32 +231,19 @@ def main():
             target = release/source.relative_to(ROOT)
             if source.is_symlink() and not target.exists():
                 raise RuntimeError(f'Broken snapshot link: {target}')
+    for relative, theme in (('mako/config', 'mako.conf'), ('fuzzel/fuzzel.ini', 'fuzzel.ini')):
+        expected = release/'assets/themes/current'/theme
+        includes = [line.split('=', 1)[1].strip() for line in (release/relative).read_text().splitlines()
+                    if line.strip().startswith('include=')]
+        if str(expected) not in includes or not expected.is_file():
+            raise RuntimeError(f'Invalid theme include in {relative}: expected {expected}')
     if args.stage_only:
         print('Validated snapshot (not installed):', release)
         return
     targets = [(config / name, release / name) for name in components]
     targets.append((config / 'systemd/user/swayidle.service', release / 'systemd/user/swayidle.service'))
     targets.append((config / 'niri', release / 'niri'))
-    journal = []
-    manifest = backup / 'manifest.json'
-    try:
-        for i, (target, source) in enumerate(targets):
-            target.parent.mkdir(parents=True, exist_ok=True)
-            saved = backup / str(i)
-            if exists(target):
-                target.rename(saved)
-            try:
-                target.symlink_to(source)
-            except BaseException:
-                if exists(saved):
-                    saved.rename(target)
-                raise
-            journal.append(dict(target=str(target), source=str(source), backup=str(saved)))
-            manifest.write_text(json.dumps(journal, indent=2))
-    except BaseException:
-        if manifest.exists():
-            rollback(manifest)
-        raise
+    manifest = install_links(targets, backup)
     print('Installed snapshot:', release)
     print('Rollback manifest:', manifest)
     subprocess.run(['systemctl','--user','daemon-reload'],capture_output=True,check=False)
