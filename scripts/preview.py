@@ -34,7 +34,10 @@ def prepare(base, legacy=False):
     # Test-only IPC injection: never included in deployed shell.qml.
     shell_file = config/'quickshell/shell.qml'
     shell_text = shell_file.read_text().replace('        function status(): string',
-        '        function previewOsd(kind: string): void { root.osdKind = kind }\n        function status(): string')
+        '        function previewOsd(kind: string): void {\n'
+        '            if (kind) root.showOsd(kind);\n'
+        '            else { root.osdBrightness = false; root.osdAudio = false }\n'
+        '        }\n        function status(): string')
     shell_file.write_text(shell_text)
     # Copied theme symlinks are materialized; there is no path back to the checkout.
     for path in config.rglob('*'):
@@ -210,9 +213,9 @@ def client(base):
                     restored = json.loads(subprocess.check_output(['qs', 'ipc', 'call', 'shell', 'status'], text=True))
                     if restored['widgets'] != smoke_widgets:
                         raise RuntimeError('Scale change overwrote saved widget geometry')
-                for kind in ('brightness', '', 'volume', '', 'mic_volume', 'brightness'):
+                for kind in ('mic_volume', 'brightness', 'volume'):
                     subprocess.run(['qs', 'ipc', 'call', 'shell', 'previewOsd', kind], check=True)
-                    time.sleep(.15)
+                    time.sleep(.25)
                 subprocess.run(['niri', 'msg', 'action', 'screenshot-screen', '--path', str(base/'osd.png')], check=True)
                 subprocess.run(['qs', 'ipc', 'call', 'shell', 'previewOsd', ''], check=True)
                 (base/'widget-checks.json').write_text(json.dumps(dict(restart=True, scale=True, widgets=smoke_widgets)))

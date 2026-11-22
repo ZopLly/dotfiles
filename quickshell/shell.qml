@@ -24,7 +24,9 @@ ShellRoot {
     property string openScreen: ""
     property bool editMode: false
     property bool snapToGrid: state.widgets && state.widgets._options ? state.widgets._options.snap : true
-    property string osdKind: ""
+    property bool osdBrightness: false
+    property bool osdAudio: false
+    property string osdAudioKind: ""
     property string osdScreen: workspaces.find(w => w.is_focused)?.output || (Quickshell.screens.length ? Quickshell.screens[0].name : "")
     property var pendingControls: ({})
     property string errorMessage: ""
@@ -66,7 +68,18 @@ ShellRoot {
             for (let action in controls) backend.write(JSON.stringify({action: action, args: controls[action]})+"\n")
         }
     }
-    Timer { id: osdTimer; interval: 1800; onTriggered: root.osdKind = "" }
+    function showOsd(kind) {
+        if (kind === "brightness") {
+            osdBrightness = true
+            brightnessOsdTimer.restart()
+        } else if (["volume", "muted", "mic_volume", "mic_muted"].includes(kind)) {
+            osdAudioKind = kind
+            osdAudio = true
+            audioOsdTimer.restart()
+        }
+    }
+    Timer { id: brightnessOsdTimer; interval: 1800; onTriggered: root.osdBrightness = false }
+    Timer { id: audioOsdTimer; interval: 1800; onTriggered: root.osdAudio = false }
     Timer { interval: 1000; running: true; repeat: true; onTriggered: {
         let current = new Date()
         if (Math.floor(current.getTime()/60000) !== Math.floor(root.now.getTime()/60000)) root.now = current
@@ -86,7 +99,7 @@ ShellRoot {
                             root.panelLayouts = event.data.panels
                         root.state = StateMerge.retainEqual(root.state, event.data)
                     }
-                    else if (event.type === "osd") { root.osdKind = event.data.kind; osdTimer.restart() }
+                    else if (event.type === "osd") root.showOsd(event.data.kind)
                     else { root.errorMessage = event.message; errorTimer.restart() }
                 } catch(e) { console.warn("Backend response:", e) }
             }

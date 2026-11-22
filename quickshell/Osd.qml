@@ -3,34 +3,47 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import "StatusIcons.js" as Icons
+
 PanelWindow {
     id: osd
     required property var shell
     required property string outputName
-    visible: shell.osdKind !== "" && outputName === shell.osdScreen
-    anchors { bottom: true }
-    margins.bottom: 72
-    implicitWidth: 260; implicitHeight: 66
+    readonly property bool microphone: shell.osdAudioKind.startsWith("mic_")
+
+    visible: outputName === shell.osdScreen && (brightness.onScreen || audio.onScreen)
+    anchors { right: true }
+    implicitWidth: brightness.implicitWidth
+    implicitHeight: audio.y + audio.implicitHeight
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     mask: Region {}
-    Rectangle {
+
+    Item {
         anchors.fill: parent
-        color: osd.shell.colors.bg_modules; radius: 22
-        border.width: 1; border.color: osd.shell.colors.accent
-        Row {
-            anchors.centerIn: parent; spacing: 14
-            Text {
-                font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 24
-                color: osd.shell.colors.fg
-                text: osd.shell.osdKind === "brightness" ? "󰃠" : osd.shell.osdKind.startsWith("mic") ? (osd.shell.state.mic_muted ? "󰍭" : "󰍬") : Icons.volume(osd.shell.state.volume, osd.shell.state.muted)
-            }
-            Text {
-                color: osd.shell.colors.fg; font.pixelSize: 20
-                text: osd.shell.osdKind === "brightness" ? osd.shell.state.brightness + "%" : osd.shell.osdKind.startsWith("mic") ? (osd.shell.state.mic_muted ? "Микрофон выкл." : osd.shell.state.mic_volume + "%") : osd.shell.state.muted ? "Без звука" : osd.shell.state.volume + "%"
-            }
+        clip: true
+
+        OsdSlider {
+            id: brightness
+            shown: osd.shell.osdBrightness
+            level: osd.shell.state.brightness ?? -1
+            icon: "󰃠"
+            surface: osd.shell.colors.bg_modules
+            foreground: osd.shell.colors.fg
+            accent: osd.shell.colors.accent
+        }
+
+        OsdSlider {
+            id: audio
+            y: brightness.height + 8
+            shown: osd.shell.osdAudio
+            level: (osd.microphone ? osd.shell.state.mic_volume : osd.shell.state.volume) ?? -1
+            muted: (osd.microphone ? osd.shell.state.mic_muted : osd.shell.state.muted) ?? false
+            icon: osd.microphone ? (muted ? "󰍭" : "󰍬") : Icons.volume(level, muted)
+            surface: osd.shell.colors.bg_modules
+            foreground: osd.shell.colors.fg
+            accent: osd.shell.colors.accent
         }
     }
 }
